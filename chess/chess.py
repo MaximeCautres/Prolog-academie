@@ -1,6 +1,7 @@
 # ici ça part sur une implémentation de jeu d'échec
-
 from copy import deepcopy
+
+unit = 50
 
 class Pion:
     def __init__(self, couleur):
@@ -179,8 +180,6 @@ class Plateau:
 partie = Plateau()
 #print(partie.map[1][4].deplacement(1, 4, partie.map))
 
-unit = 100
-
 import os
 import pygame
 from pygame.locals import *
@@ -273,7 +272,7 @@ while continuer:
         # continuer = 0 if input() == 'abandon' else 1  
         if event.type == MOUSEBUTTONDOWN and event.button == 1:
             x, y = event.pos
-            i, j = x // 100, 7 - y // 100
+            i, j = x // unit, 7 - y // unit
             if not selectionee:     # ici, on choisi un de nos pion
                 if partie.map[j][i] != 0 and partie.map[j][i].couleur == joueur:
                     fenetre.blit(case_selectionne, (i*unit, (7-j) * unit))
