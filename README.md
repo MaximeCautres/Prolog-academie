@@ -2,4 +2,4 @@
 
 ## Chess GUI
 
-N'hésitez pas à modifier $unit$ qui définit la taille en pixel d'un carreaux de l'échéquier
+N'hésitez pas à modifier la variable unit qui définit la taille en pixel d'un carreaux de l'échéquier
