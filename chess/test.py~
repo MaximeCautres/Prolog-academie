@@ -1,0 +1,107 @@
+def main():
+    partie = Plateau()
+    while not partie.echecetmateabandon:
+        if partie.numero_tour % 2 == 0: # blanc joue
+            joueur = 'blanc'
+            adversaire = 'noir'
+        else:
+            joueur = 'noir'
+            adversaire = 'blanc'
+
+        # Il faut vérifier que adversaire ne mette pas en échec le joeur
+        echec_state = False
+        for piece in partie.piece[adversaire]:
+            _, mangeable, _ = partie.map[piece[0]][piece[1]].deplacement(piece[0], piece[1], partie.carte)
+            if partie.roi[joueur] in mangeable:
+                echec_state = True
+                break
+
+        if echec_state: # on doit vérifier le coup de joueur met le roi à l'abri
+            backuppartie = deepcopy(partie)
+            echec_state_verif = True
+            while echec_state_verif:
+                """
+
+                Ici, il faut implémenter le bouton d'abandon, qui fera simplement un return et clausera le programme
+                
+                Il faudra implémenter le Roque (un peu relou) et le pion qui se se change au bout (easy)
+                
+                Ici, il faut implémenter l'interface graphique avec bouton, ou le joeur selectionne la case, 
+                il ne doit pouvoir selectionner que les case qui sont dans partie.piece[joueur]
+                le joueur joisie de jouer la piece en y, x, on obtient ce qu'il peut jouer avec deplacement.
+                Il choisir parmis le resultat de deplacement ce qu'il veut faire, si il reclique sur la piece ça la déselectionne.
+                On obtient donc j,i position de la nouvelle piece, plus on sait si il a mangé ou non
+                """
+                mange = True # False
+                y, x =
+                j, i = 
+                partie.map[j][i] = deepcopy(partie.map[y][x])
+                partie.map[y][x] = 0
+                partie.piece[joueur].remove([y, x])
+                partie.piece[joueur]+= [j, i]
+                partie.numero_tour += 1
+                
+                if partie.roi[joueur] == [y, x]:
+                    partie.roi[joueur] = [j, i]
+                    
+                if mange:
+                    partie.piece[adversaire].remove([j,i])
+                    
+                echec_state_verif = False
+                for piece in partie.piece[adversaire]:
+                    _, mangeable, _ = partie.map[piece[0]][piece[1]].deplacement(piece[0], piece[1], partie.carte)
+                    if partie.roi[joueur] in mangeable:
+                        echec_state_verif = True
+                        break
+                if echec_state_verif:
+                    partie = deepcopy(backuppartie)
+            
+            
+                
+                
+
+        else: # sino le joueur fait ce qu'il veut
+            """
+            Il faudra implémenter le Roque (implémenté seulement sur la tour) et le pion qui se se change au bout (easy), implémenté normalement
+
+            Ici, il faut implémenter l'interface graphique avec bouton, ou le joeur selectionne la case, 
+            il ne doit pouvoir selectionner que les case qui sont dans partie.piece[joueur]
+            le joueur joisie de jouer la piece en y, x, on obtient ce qu'il peut jouer avec deplacement.
+            Il choisir parmis le resultat de deplacement ce qu'il veut faire, si il reclique sur la piece ça la déselectionne.
+            On obtient donc j,i position de la nouvelle piece, plus on sait si il a mangé ou non
+            """
+            mange = True # False
+            y, x =
+            j, i = 
+            partie.map[j][i] = deepcopy(partie.map[y][x])
+            partie.map[y][x] = 0
+            partie.piece[joueur].remove([y, x])
+            partie.piece[joueur]+= [j, i]
+            partie.numero_tour += 1
+
+            if partie.roi[joueur] == [y, x]:
+                partie.roi[joueur] = [j, i]
+                partie.roi[joueur].abouge = True
+
+            if mange:
+                partie.piece[adversaire].remove([j,i])
+
+        if partie.map[j][i].piecetype == 'tour':
+            partie.map[j][i].abouge = True 
+
+        # Ici, on gère le cas ou le pion atteint la bordure adversaire, "promotion"
+            
+        if partie.map[j][i].piecetype == 'pion' and ((j == 7 and joeur == 'blanc')
+                                                    or (j==1 and joeur == 'noir')): 
+            "ici, il faut mettre desbouton pour choisir la promotion"
+            bouton =
+            if bouton == 'cavalier':
+                partie.map[j][i] = Cavalier(joueur)
+            if bouton == 'fou':
+                partie.map[j][i] = Fou(joueur)
+            if bouton == 'renne':
+                partie.map[j][i] = Renne(joueur)
+            if bouton == 'tour':
+                partie.map[j][i] = Tour(joueur)
+                partie.map[j][i].abouge = True
+               
