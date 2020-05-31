@@ -1,32 +1,42 @@
 # ici ça part sur une implémentation de jeu d'échec
 from copy import deepcopy
 
-unit = 50
+unit = 100
 
 class Pion:
     def __init__(self, couleur):
         self.couleur = couleur
         self.piecetype = 'pion'
+        self.bouge_2 = -10
 
-    def deplacement(self, y, x, carte): # renvoie les positions possibles avec ou sans manger pour un poin
+    def deplacement(self, y, x, partie): # renvoie les positions possibles avec ou sans manger pour un poin
+        carte = partie.map
+        
         mouvement = []
         manger = []
         roque = []
+        passant = []
 
         times = 1 if self.couleur == 'blanc' else -1
 
-        if 0 <= y + times < 8 and carte[y + times][x] == 0:
+        if 0 <= y + times < 8 and carte[y + times][x] == 0: # On gère le deplacement
                 mouvement += [[y + times, x]]
                 if y == (1 if self.couleur == 'blanc' else 6) and carte[y + times * 2][x] == 0:
                     mouvement += [[y + times * 2, x]]
 
         cas = [1, -1]
-        for e in cas:
+        for e in cas: # On gère le mangeage classique
             if 0 <= y + times < 8 and 0 <= x + e < 8 and carte[y + times][x + e] != 0:
                 if carte[y + times][x + e].couleur != self.couleur:
                     manger += [[y + times, x + e]]
 
-        return mouvement, manger, roque
+        for e in cas: # On gère la prise par passant
+            if y == (4 if self.couleur == 'blanc' else 3) and 0 <= x + e < 8 and carte[y + times][x + e] == 0:
+                if carte[y][x + e] != 0 and carte[y][x + e].couleur != self.couleur and carte[y][x + e].piecetype == 'pion' and carte[y][x + e].bouge_2 == partie.numero_tour - 1:
+                    passant += [[y + times, x + e]]
+
+
+        return mouvement, manger, roque, passant
 
     
 class Tour:
@@ -35,7 +45,9 @@ class Tour:
         self.couleur = couleur
         self.piecetype = 'tour'
 
-    def deplacement(self, y, x, carte): # retourne les position ou peu se déplacer la tour avec ou sans manger
+    def deplacement(self, y, x, partie): # retourne les position ou peu se déplacer la tour avec ou sans manger
+        carte = partie.map
+        
         manger = []
         roque = []
         mouvement = []
@@ -52,7 +64,7 @@ class Tour:
                 roque += [[di[-1][0] + e1, di[-1][1] + e2]]
             mouvement += di[1:]
             
-        return mouvement, manger, roque
+        return mouvement, manger, roque, []
 
     
 class Cavalier:
@@ -60,7 +72,8 @@ class Cavalier:
         self.couleur = couleur
         self.piecetype = 'cavalier'
 
-    def deplacement(self, y, x, carte): # retourne les déplacement possible ou peu se deplacer le cheval avec ou sans manger
+    def deplacement(self, y, x, partie): # retourne les déplacement possible ou peu se deplacer le cheval avec ou sans manger
+        carte = partie.map
         manger = []
         mouvement = []
         roque = []
@@ -73,7 +86,7 @@ class Cavalier:
             elif 0 <= y + e1 < 8 and 0 <= x + e2 < 8 and carte[y + e1][x + e2].couleur != self.couleur:
                 manger += [[y +e1, x + e2]]
   
-        return mouvement, manger, roque
+        return mouvement, manger, roque, []
 
     
 class Fou:
@@ -81,7 +94,9 @@ class Fou:
         self.couleur = couleur
         self.piecetype = 'fou'
 
-    def deplacement(self, y, x, carte): # retourne les position ou peu se déplacer la tour avec ou sans manger
+    def deplacement(self, y, x, partie): # retourne les position ou peu se déplacer la tour avec ou sans manger
+        carte = partie.map
+        
         manger = []
         roque = []
         mouvement = []
@@ -96,7 +111,8 @@ class Fou:
                 manger += [[di[-1][0] + e1, di[-1][1] + e2]]
             mouvement += di[1:]
             
-        return mouvement, manger, roque
+        return mouvement, manger, roque, []
+
 
 
 class Roi:
@@ -105,7 +121,9 @@ class Roi:
         self.couleur = couleur
         self.piecetype = 'roi'
 
-    def deplacement(self, y, x, carte): # On retourne la position du roi avec ou sans manger
+    def deplacement(self, y, x, parite): # On retourne la position du roi avec ou sans manger
+        carte = partie.map
+
         manger = []
         mouvement = []
         roque = []
@@ -118,7 +136,7 @@ class Roi:
             elif 0 <= y + e1 < 8 and 0 <= x + e2 < 8 and carte[y + e1][x + e2].couleur != self.couleur:
                 manger += [[y + e1, x + e2]]
   
-        return mouvement, manger, roque
+        return mouvement, manger, roque, []
 
     
 class Renne:
@@ -126,7 +144,9 @@ class Renne:
         self.couleur = couleur
         self.piecetype = 'renne'
 
-    def deplacement(self, y, x, carte): # retourne les position ou peu se déplacer la tour avec ou sans manger
+    def deplacement(self, y, x, partie): # retourne les position ou peu se déplacer la tour avec ou sans manger
+        carte = partie.map
+        
         manger = []
         roque = []
         mouvement = []
@@ -141,7 +161,7 @@ class Renne:
                 manger += [[di[-1][0] + e1, di[-1][1] + e2]]
             mouvement += di[1:]
             
-        return mouvement, manger, roque
+        return mouvement, manger, roque, []
         
 
 class Plateau:
@@ -170,9 +190,11 @@ class Plateau:
         self.map[0][4] = Roi('blanc')
         self.map[7][4] = Roi('noir')
 
+        self.map[4][4] = Pion('blanc')
+
         self.numero_tour = 0 
         self.abandon = False # c'est petit mais le echec et mate c'est chiant à mettre en place
-        self.piece = {'blanc': [[0, x] for x in range(8)] + [[1, x] for x in range(8)],
+        self.piece = {'blanc': [[0, x] for x in range(8)] + [[1, x] for x in range(8)] + [[4, 4]],
                       'noir': [[6, x] for x in range(8)] + [[7, x] for x in range(8)]
         }
         self.roi = {'blanc': [0, 4], 'noir': [7, 4]}
@@ -276,21 +298,24 @@ while continuer:
             if not selectionee:     # ici, on choisi un de nos pion
                 if partie.map[j][i] != 0 and partie.map[j][i].couleur == joueur:
                     fenetre.blit(case_selectionne, (i*unit, (7-j) * unit))
-                    mouvement, manger, roque = partie.map[j][i].deplacement(j, i, partie.map)
+                    mouvement, manger, roque, passant = partie.map[j][i].deplacement(j, i, partie)
                     for cj, ci in mouvement:
                         fenetre.blit(case_deplacement, (ci*unit, (7-cj) * unit))
                     for cj, ci in manger:
                         fenetre.blit(case_mangeage, (ci*unit, (7-cj) * unit))
                     for cj, ci in roque:
                         fenetre.blit(case_roque, (ci*unit, (7-cj) * unit))
+                    for cj, ci in passant:
+                        fenetre.blit(case_mangeage, (ci*unit, (7-cj) * unit))
                         
                     selectionee = [j, i]
-                    role = manger + mouvement + roque
+                    role = manger + mouvement + roque + passant
 
             else: # Ici, on fait une actions
                 if [j, i] in role: # Soit on deplace
                     backup = deepcopy(partie)
-                    print("Vous etes echec !!")
+                    if echec:
+                        print("Vous etes echec !!")
                     
                     if [j, i] in partie.piece[joueur]: # Si on roque
                         partie.map[j][i], partie.map[selectionee[0]][selectionee[1]] = deepcopy(partie.map[selectionee[0]][selectionee[1]]), deepcopy(partie.map[j][i])
@@ -307,13 +332,33 @@ while continuer:
                         if [j, i] in partie.piece[adversaire]: # Si on mange une piece de l'autre
                             partie.piece[adversaire].remove([j,i])
 
+                        if partie.map[j][i].piecetype == 'pion' and i != selectionee[1] and [j - (1 if joueur == 'blanc' else -1), i] in partie.piece[adversaire]: # Si l'on mange en passant
+                            partie.piece[adversaire].remove([j - (1 if joueur == 'blanc' else -1), i])
+                            partie.map[j-(1 if joueur == 'blanc' else -1)][i] = 0
+                            role += [[j-(1 if joueur == 'blanc' else -1), i]]
+                            
+
+                        if partie.map[j][i].piecetype == 'pion' and abs(j - selectionee[0]) == 2:
+                            partie.map[j][i].bouge_2 = partie.numero_tour 
+                            
                         if partie.roi[joueur] == selectionee: # Si on bouge le roi, on doit interdire le roque
                             partie.roi[joueur] = [j, i]
                             partie.map[j][i].abouge = True
 
                         if partie.map[j][i] == 'tour':
                             partie.map[j][i].abouge = True
-                            
+
+                    echec = False
+                    for piece in partie.piece[adversaire]:
+                        _, mangeable, _, _ = partie.map[piece[0]][piece[1]].deplacement(piece[0], piece[1], partie)
+                        if partie.roi[joueur] in mangeable:
+                            echec = True
+                            break
+
+                    if echec:
+                        partie = deepcopy(backup)
+                    else:
+
                         if j == (7 if joueur == 'blanc' else 0) and partie.map[j][i].piecetype == 'pion':
                             n = 0
                             while not 0 < n < 5:
@@ -332,24 +377,14 @@ while continuer:
                                 else:
                                     partie.map[j][i] = Tour(joueur)
                                     partie.map[j][i].abouge = True
-
-                    echec = False
-                    for piece in partie.piece[adversaire]:
-                        _, mangeable, _ = partie.map[piece[0]][piece[1]].deplacement(piece[0], piece[1], partie.map)
-                        if partie.roi[joueur] in mangeable:
-                            echec = True
-                            break
-
-                    if echec:
-                        partie = deepcopy(backup)
-                    else:
+                        
                         for j, i in [selectionee]+role: # On change de tour, on refait l'echequier propre
                             affiche_piece(j, i)
                         
                         selectionee = False # Comme on change de tour on deselectionne
 
                         for piece in partie.piece[joueur]:
-                            _, mangeable, _ = partie.map[piece[0]][piece[1]].deplacement(piece[0], piece[1], partie.map)
+                            _, mangeable, _, _ = partie.map[piece[0]][piece[1]].deplacement(piece[0], piece[1], partie)
                             if partie.roi[adversaire] in mangeable:
                                 echec = True
                                 break
