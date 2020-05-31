@@ -1,4 +1,4 @@
-# Prolog-academie
+# Prologin-academy
 
 ## Chess Game
 
