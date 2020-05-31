@@ -190,11 +190,11 @@ class Plateau:
         self.map[0][4] = Roi('blanc')
         self.map[7][4] = Roi('noir')
 
-        self.map[4][4] = Pion('blanc')
+        #self.map[4][4] = Pion('blanc')
 
         self.numero_tour = 0 
         self.abandon = False # c'est petit mais le echec et mate c'est chiant à mettre en place
-        self.piece = {'blanc': [[0, x] for x in range(8)] + [[1, x] for x in range(8)] + [[4, 4]],
+        self.piece = {'blanc': [[0, x] for x in range(8)] + [[1, x] for x in range(8)],
                       'noir': [[6, x] for x in range(8)] + [[7, x] for x in range(8)]
         }
         self.roi = {'blanc': [0, 4], 'noir': [7, 4]}
