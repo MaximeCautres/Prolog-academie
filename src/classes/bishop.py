@@ -1,6 +1,6 @@
 class Bishop(Piece):
-    def __init__(self, color):
-        self.color = color
+    def __init__(self, color, xPos, yPos):
+        Piece.__init__(self, xPos, yPos, color)
         self.piecetype = 'bishop'
 
     # Return positions where we can move with or withour eating
