@@ -1,26 +1,26 @@
-class Tour:
-    def __init__(self, couleur):
-        self.abouge = False
-        self.couleur = couleur
+class Rook:
+    def __init__(self, color):
+        self.moved = False
+        self.color = color
         self.piecetype = 'tour'
 
     # On retourne les position ou peu se déplacer la tour avec ou sans manger
-    def deplacement(self, y, x, partie):
-        carte = partie.map
-        manger = []
-        roque = []
-        mouvement = []
+    def move(self, y, x, game):
+        mapGame = game.map
+        eat = []
+        castling = []
+        movement = []
 
-        cas = [[1, 0], [0, 1], [-1, 0], [0, -1]]
+        cases = [[1, 0], [0, 1], [-1, 0], [0, -1]]
 
-        for e1, e2 in cas:
+        for e1, e2 in cases:
             di = [[y, x]]
-            while 0 <= di[-1][0] + e1 < 8 and 0 <= di[-1][1] + e2 < 8 and carte[di[-1][0] + e1][di[-1][1] + e2] == 0:
+            while 0 <= di[-1][0] + e1 < 8 and 0 <= di[-1][1] + e2 < 8 and mapGame[di[-1][0] + e1][di[-1][1] + e2] == 0:
                 di += [[di[-1][0] + e1, di[-1][1] + e2]]
-            if 0 <= di[-1][0] + e1 < 8 and 0 <= di[-1][1] + e2 < 8 and carte[di[-1][0] + e1][di[-1][1] + e2].couleur != self.couleur:
-                manger += [[di[-1][0] + e1, di[-1][1] + e2]]
-            if 0 <= di[-1][0] + e1 < 8 and 0 <= di[-1][1] + e2 < 8 and carte[di[-1][0] + e1][di[-1][1] + e2].couleur == self.couleur and carte[di[-1][0] + e1][di[-1][1] + e2].piecetype == 'roi' and not self.abouge and not carte[di[-1][0] + e1][di[-1][1] + e2].abouge:
-                roque += [[di[-1][0] + e1, di[-1][1] + e2]]
-            mouvement += di[1:]
+            if 0 <= di[-1][0] + e1 < 8 and 0 <= di[-1][1] + e2 < 8 and mapGame[di[-1][0] + e1][di[-1][1] + e2].color != self.color:
+                eat += [[di[-1][0] + e1, di[-1][1] + e2]]
+            if 0 <= di[-1][0] + e1 < 8 and 0 <= di[-1][1] + e2 < 8 and mapGame[di[-1][0] + e1][di[-1][1] + e2].color == self.color and mapGame[di[-1][0] + e1][di[-1][1] + e2].piecetype == 'roi' and not self.moved and not mapGame[di[-1][0] + e1][di[-1][1] + e2].moved:
+                castling += [[di[-1][0] + e1, di[-1][1] + e2]]
+            movement += di[1:]
 
-        return mouvement, manger, roque, []
+        return movement, eat, castling, []
