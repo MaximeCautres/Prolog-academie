@@ -1,5 +1,6 @@
 class Queen(Piece):
-    def __init__(self, color):
+    def __init__(self, color, xPos, yPos):
+        Piece.__init__(self, xPos, yPos, color)
         self.colors = color
         self.piecetype = 'queen'
 

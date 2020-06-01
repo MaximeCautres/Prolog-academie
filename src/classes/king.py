@@ -1,7 +1,7 @@
 class King(Piece):
-    def __init__(self, color):
+    def __init__(self, color, xPos, yPos):
+        Piece.__init__(self, xPos, yPos, color)
         self.moved = False
-        self.color = color
         self.piecetype = 'king'
 
     # Return the king position with or without eating

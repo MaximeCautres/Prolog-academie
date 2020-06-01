@@ -1,7 +1,7 @@
 class Rook(Piece):
-    def __init__(self, color):
+    def __init__(self, color, xPos, yPos):
+        Piece.__init__(self, xPos, yPos, color)
         self.moved = False
-        self.color = color
         self.piecetype = 'tour'
 
     # On retourne les position ou peu se déplacer la tour avec ou sans manger
