@@ -16,8 +16,6 @@ from classes.rook import rook
 
 from GUI.plateau import plateau
 
-
-
 unit = 100
 
 if __name__ == "__main__":
