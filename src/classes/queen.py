@@ -5,7 +5,7 @@ class Queen(Piece):
         self.piecetype = 'queen'
 
     # Return position where can move
-    def move(self, yPos, xPos, game):
+    def get_move(self, yPos, xPos, game):
         mapGame = game.map
         eat = []
         castling = []

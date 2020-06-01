@@ -5,7 +5,7 @@ class Rook(Piece):
         self.piecetype = 'tour'
 
     # On retourne les position ou peu se déplacer la tour avec ou sans manger
-    def move(self, yPos, xPos, game):
+    def get_move(self, yPos, xPos, game):
         mapGame = game.map
         eat = []
         castling = []

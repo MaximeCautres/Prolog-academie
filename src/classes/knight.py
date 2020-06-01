@@ -4,7 +4,7 @@ class Knight(Piece):
         self.piecetype = 'knight'
 
     # Return movement where the knight can move
-    def move(self, yPos, xPos, game):
+    def get_move(self, yPos, xPos, game):
         mapGame = game.map
         eat = []
         movement = []
