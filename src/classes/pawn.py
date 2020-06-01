@@ -1,6 +1,6 @@
 class Pawn(Piece):
-    def __init__(self, color):
-        self.color = color
+    def __init__(self, color, xPos, yPos):
+        Piece.__init__(self, color xPos, yPos)
         self.piecetype = 'pawn'
         self.moved = -10
 
