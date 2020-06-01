@@ -1,11 +1,11 @@
 from copy import deepcopy
 
-from classe.cavalier import cavalier
-from classe.fou import fou
-from classe.pion import pion
-from classe.reine import reine
-from classe.roi import roi
-from classe.tour import tour
+from classes.knight import knight
+from classes.bishop import bishop
+from classes.pawn import pawn
+from classes.queen import queen
+from classes.king import king
+from classes.rook import rook
 
 from GUI.plateau import plateau
 
