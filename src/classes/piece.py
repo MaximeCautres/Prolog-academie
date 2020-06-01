@@ -6,11 +6,12 @@ class Piece:
         self.pieceType = pieceType
 
     def pieceMovement(self):
-        switcher = {
-            "bishop": ,
-            "king": ,
-            "knight": ,
-            "pawn": ,
-            "queen": ,
-            "rook": ,
+        switch (self.pieceType) {
+            case "bishop": ;
+            case "king": ,
+            case "knight": ,
+            case "pawn": ,
+            case "queen": ,
+            case "rook": ,
         }
+        return switcher[self.pieceType]
