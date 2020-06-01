@@ -31,7 +31,7 @@ class Pawn:
         # "en passant"
         for e in cases:
             if yPos == (4 if self.color == 'white' else 3) and 0 <= xPos + e < 8 and mapGame[yPos + times][xPos + e] == 0:
-                if mapGame[yPos][xPos + e] != 0 and mapGame[yPos][xPos + e].color != self.color and mapGame[yPos][xPos + e].piecetyPospe == 'pown' and mapGame[yPos][xPos + e].moved == game.numero_tour - 1:
+                if mapGame[yPos][xPos + e] != 0 and mapGame[yPos][xPos + e].color != self.color and mapGame[yPos][xPos + e].piecetype == 'pown' and mapGame[yPos][xPos + e].moved == game.round_number - 1:
                     enPassant += [[yPos + times, xPos + e]]
 
         return movement, eat, castling, enPassant
