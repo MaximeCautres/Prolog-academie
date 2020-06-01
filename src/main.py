@@ -1,3 +1,10 @@
+import os
+import pygame
+
+import matplotlib.image as mpimg
+import numpy as np
+
+from pygame.local import *
 from copy import deepcopy
 
 from classes.bishop import bishop
@@ -9,6 +16,9 @@ from classes.rook import rook
 
 from GUI.plateau import plateau
 
+
+
 unit = 100
 
 if __name__ == "__main__":
+    pygame.init()
