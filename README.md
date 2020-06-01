@@ -1,5 +1,8 @@
-# Prolog-academie
+# Prologin-academy
 
-## Chess GUI
+## Chess Game
 
-N'hésitez pas à modifier la variable unit qui définit la taille en pixel d'un carreaux de l'échéquier
+This is a chess game proposed by 2 students in IT.  
+If you notice some problems you can open an issue and we will be very proud to correct it.  
+
+Do not hesitate to modify the unit variable which defines the size in pixel of a checkerboard tile.  
