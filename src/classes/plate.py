@@ -2,11 +2,9 @@ class Plate:
     def __init__(self):
 
         # Create the table which represents the plate
-
         self.map = [[0 for _ in range(8)] for _ in range(8)]
 
         # Initialization of the plate with all the pieces
-
         for x in range(8):
             self.map[1][x] = Pawn('white')
             self.map[6][x] = Pawn('black')
@@ -28,15 +26,12 @@ class Plate:
         self.map[7][4] = King('black')
 
         # Initialization of the round_number
-
         self.round_number = 0
 
         # Positions of all the pieces at the beginning of the games. It changes with pieces' moves
-
         self.pieces = {'white': [[0, x] for x in range(8)] + [[1, x] for x in range(8)],
                       'black': [[6, x] for x in range(8)] + [[7, x] for x in range(8)]
         }
 
         # The kings will need to be track during the game for the check detection
-
         self.king = {'white': [0, 4], 'black': [7, 4]}
