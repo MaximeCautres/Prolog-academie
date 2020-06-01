@@ -1,4 +1,4 @@
-class King:
+class King(Piece):
     def __init__(self, color):
         self.moved = False
         self.color = color

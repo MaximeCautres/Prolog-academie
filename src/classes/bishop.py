@@ -1,4 +1,4 @@
-class Bishop:
+class Bishop(Piece):
     def __init__(self, color):
         self.color = color
         self.piecetype = 'bishop'

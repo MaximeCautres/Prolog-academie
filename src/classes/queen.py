@@ -1,4 +1,4 @@
-class Queen:
+class Queen(Piece):
     def __init__(self, color):
         self.colors = color
         self.piecetype = 'queen'

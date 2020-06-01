@@ -1,4 +1,4 @@
-class Pawn:
+class Pawn(Piece):
     def __init__(self, color):
         self.color = color
         self.piecetype = 'pawn'

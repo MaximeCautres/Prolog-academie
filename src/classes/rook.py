@@ -1,4 +1,4 @@
-class Rook:
+class Rook(Piece):
     def __init__(self, color):
         self.moved = False
         self.color = color
