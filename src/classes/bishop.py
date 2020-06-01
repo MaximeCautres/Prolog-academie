@@ -4,7 +4,10 @@ class Bishop(Piece):
         self.piecetype = 'bishop'
 
     # Return positions where we can move with or withour eating
-    def get_move(self, yPos, xPos, game):
+    def get_move(self, game):
+
+        yPos, xPos = self.yPos, self.xPos
+        
         mapGame = game.map
         eat = []
         castling = []

@@ -130,7 +130,8 @@ class Plate:
         
         def update_display(self, to_update):
             for y, x in to_update:
-                self.window.blit(white_case if (x+y+1)%2 == 0 else black_case, (x * unit, (7-y) * unit))
+                self.window.blit(white_case if (x+y+1)%2 == 0 else black_case,
+                                 (x * unit, (7-y) * unit))
                 if self.map[y][x] != None:
                     self.window.blit(pieces_skin[self.map[y][x].piecetype][self.map[y][x].couleur], (int((x+0.1) * unit), int((7-y + 0.1) * unit)))
 

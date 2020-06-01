@@ -5,7 +5,10 @@ class Pawn(Piece):
         self.moved = -10
 
     # return possible positions
-    def get_move(self, yPos, xPos, game):
+    def get_move(self, game):
+
+        yPos, xPos = self.yPos, self.xPos
+        
         mapGame = game.map
         movement = []
         eat = []
