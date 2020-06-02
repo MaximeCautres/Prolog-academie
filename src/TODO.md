@@ -1,5 +1,9 @@
 # TODO
 
-[] Refaire tout le roque en fait  
-[] Séparer les classes dans des fichiers distincts  
-[] Séparer la GUI dans un autre fichier  
+[] Fix castling  
+[x] Séparate classes in distincts folders  
+[x] Séparate GUI in a new folder  
+[] Review the conception:  
+- the board contains the object
+- each movement update the board and move the object
+[] ???
