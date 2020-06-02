@@ -6,7 +6,6 @@ import matplotlib.image as mpimg
 
 from pygame.locals import *
 
-
 class Plate:
     def __init__(self, unit)):
 
@@ -51,7 +50,6 @@ class Plate:
         def display(self):
 
             # Creation of the board's visual
-
             bakground = np.zeros((unit*8, unit*8, 3), dtype=np.uint8)
             for i in range(8):
                 for j in range(8):
@@ -63,7 +61,6 @@ class Plate:
             mpimg.imsave("background.png", background)
 
             # Creation of the board's visual annexes
-
             mpimg.imsave("white_case.png", np.array([[[240, 209, 136] for _ in range(unit)] for _ in range(unit)], dtype=np.uint8))
             mpimg.imsave("black_case.png", np.array([[[102, 51, 0] for _ in range(unit)] for _ in range(unit)], dtype=np.uint8))
             mpimg.imsave("movement_case.png", np.array([[[128, 109, 90, 150] for _ in range(unit)] for _ in range(unit)], dtype=np.uint8))
@@ -72,7 +69,6 @@ class Plate:
             mpimg.imsave("castling_case.png", np.array([[[255, 215, 0, 60] for _ in range(unit)] for _ in range(unit)], dtype=np.uint8))
 
             # We load annexes and background for futur uses
-            
             self.background = pygame.image.load("background.png").convert()
             self.white_case = pygame.image.load("white_case.png").convert()
             self.black_case = pygame.image.load("black_case.png").convert()
@@ -95,28 +91,24 @@ class Plate:
                                          False: pygame.transform.scale(pygame.image.load("../pictures/blackQueen.png").convert_alpha(), (int(unit * 0.8), int(unit * 0.8) ))}}
 
             # We clean the repository
-
             os.system("rm background.png white\_case.png black\_case.png eat\_case.png movement\_case.png castling\_case.png select\_case.png")
 
             # We initialize the pygame window
-
             pygame.init()
 
             # We display the board
-            
             self.window = pygame.display.set_mode((unit*8, unit*8))
             self.window.blit(background, (0, 0))
 
             # We display the initial board configuration
-
             to_update = []
-            
+
             for couleur in self.pieces:
                 to_update += self.pieces[couleur]
 
             self.update_display(to_update)
 
-            
+
         def apply_selection(self, movement, eat, castling, enPassant):
             for y, x in movement:
                 fenetre.blit(movemeent_case, (i*unit, (7-j) * unit))
@@ -127,7 +119,7 @@ class Plate:
             for y, x in enPassant:
                 fenetre.blit(eat_case, (i*unit, (7-j) * unit))
             pygame.display.flip()
-        
+
         def update_display(self, to_update):
             for y, x in to_update:
                 self.window.blit(white_case if (x+y+1)%2 == 0 else black_case,
@@ -136,6 +128,3 @@ class Plate:
                     self.window.blit(pieces_skin[self.map[y][x].piecetype][self.map[y][x].couleur], (int((x+0.1) * unit), int((7-y + 0.1) * unit)))
 
             pygame.display.flip()
-        
-
-        
