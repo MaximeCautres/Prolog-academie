@@ -8,7 +8,7 @@ class Rook(Piece):
     def get_move(self, game):
 
         yPos, xPos = self.yPos, self.xPos
-        
+
         mapGame = game.map
         eat = []
         castling = []
