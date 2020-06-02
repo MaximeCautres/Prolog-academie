@@ -5,14 +5,17 @@ class Game:
         self.board = board
         self.inGame = True
         self.check = False
+        self.selected = False
 
     def getEvent(self):
-        for event in pygame.event.get(): # We ask the user to do something 
-            if event.type == QUIT: # We close the pygame window
-                pygame.quit()
-                return False
-            if event.type == MOUSEBOUTTONDOWN and event.button == 1: # We return the coordonate of the click
-                return j, i = 7 - y // unit, x // unit
+        while True:
+            for event in pygame.event.get(): # We ask the user to do something
+                if event.type == QUIT: # We close the pygame window
+                    pygame.quit()
+                    return False
+                if event.type == MOUSEBOUTTONDOWN and event.button == 1: # We return the coordonate of the click
+                    x, y = event.pos
+                    return  7 - y // unit, x // unit
 
     def launchGame(self):
         while self.inGame:
@@ -21,9 +24,9 @@ class Game:
     def select(self, yPos, xPos):
         if self.board.map[yPos][xPos] != None and self.board.map[yPos][xPos].color == player:
             movement, eat, castling, enPassant = self.board.map[yPos][xPos].get_move(self.board)
-            self.board.apply_selection([yPos, xPos], movement, eat, castling, enPassant)
-            self.board.selected = [j, i]
-            self.board.possible_action = movement + eat + castling + enPassant
+            self.selected = [yPos, xPos]
+            self.board.applySelection(self.selected, movement, eat, castling, enPassant)
+            self.board.possibleAction = movement + eat + castling + enPassant
 
     def round(self):
         played = False
@@ -34,101 +37,92 @@ class Game:
             if event:
                 j, i = event
 
-                if not self.board.selected: # If the player hasn't already chosen a piece
+                # If the player hasn't already chosen a piece
+                if not self.selected:
                     self.select(j, i)
                 else: # If a piece is already selected, the player chose the new piece's place
-                    if [j, i] in role: # The player hase chosen the move
-
-                        back_up = deepcopy(self.board)
+                    if [j, i] in possibleAction: # The player hase chosen the move
+                        backUp = deepcopy(self.board)
                         if self.echec:
                             print("your are check")
-
                         if [j, i] in self.board.piece[player]: # if the player decide to castle
                             # it is needed to correctly implement the castling here
                         else: # normal movement or eat
                             self.board.map[j][i] = deepcopy(self.board.map[self.selected[0]][self.selected[1]])
-
-                            self.board.map[selected[0]][selected[1]] = 0
-                            self.board.piece[joueur].remove(selectionee)
-                            self.board.piece[joueur]+= [[j, i]]
+                            self.board.map[selected[0]][selected[1]] = None
+                            self.board.piece[joueur].remove(self.selected)
+                            self.board.piece[joueur] += [[j, i]]
                             self.board.map[j][i].yPos = j
                             self.board.map[j][i].xPos = i
 
-                            # Si on mange une piece de l'autre
-                            if [j, i] in partie.piece[adversaire]:
-                                partie.piece[adversaire].remove([j,i])
+                            # If we eat an adversary piece
+                            if [j, i] in self.board.piece[not player]:
+                                self.board.piece[not player].remove([j,i])
 
-                            # Si l'on mange en passant
-                            if partie.map[j][i].piecetype == 'pion' and i != selectionee[1] and [j - (1 if joueur == 'blanc' else -1), i] in partie.piece[adversaire]:
-                                partie.piece[adversaire].remove([j - (1 if joueur == 'blanc' else -1), i])
-                                partie.map[j-(1 if joueur == 'blanc' else -1)][i] = 0
-                                role += [[j-(1 if joueur == 'blanc' else -1), i]]
+                            # Eat enPassant
+                            if self.board.map[j][i].piecetype == 'pawn' and i != selected[1]:
+                            #and [j - (1 if player else -1), i] in self.board.piece[not player]:
+                                self.board.piece[not player].remove([j - (1 if player else -1), i])
+                                self.board.map[j - (1 if player else - 1)][i] = 0
+                                possibleAction += [[j - (1 if player else - 1), i]]
 
+                            if self.board.map[j][i].piecetype == 'pawn' and abs(j - selectionee[0]) == 2:
+                                self.board.map[j][i].move2 = self.board.roundNumber
 
-                            if partie.map[j][i].piecetype == 'pion' and abs(j - selectionee[0]) == 2:
-                                partie.map[j][i].bouge_2 = partie.numero_tour
+                            # If we move the king the castling must be forbiden
+                            if self.board.king[player] == selected:
+                                self.board.king[player] = [j, i]
+                                self.board.map[j][i].moved = True
 
-                            # Si on bouge le roi, on doit interdire le roque
-                            if partie.roi[joueur] == selectionee:
-                                partie.roi[joueur] = [j, i]
-                                partie.map[j][i].abouge = True
+                            if self.board.map[j][i] == 'rook':
+                                self.board.map[j][i].moved = True
 
-                            if partie.map[j][i] == 'tour':
-                                partie.map[j][i].abouge = True
-
-                            echec = False
-                            for piece in partie.piece[adversaire]:
-                                _, mangeable, _, _ = partie.map[piece[0]][piece[1]].deplacement(piece[0], piece[1], partie)
-                                if partie.roi[joueur] in mangeable:
-                                    echec = True
+                            self.check = False
+                            for y, x in self.board.piece[not player]:
+                                _, eat, _, _ = self.board.map[y][x].getMove(self.board)
+                                if self.board.king[player] in eat:
+                                    self.check = True
                                     break
 
-                            if echec:
-                                partie = deepcopy(backup)
+                            if self.check:
+                                self.board = deepcopy(backUp)
                             else:
-
-                                if j == (7 if joueur == 'blanc' else 0) and partie.map[j][i].piecetype == 'pion':
+                                if j == (7 if player else 0) and self.board.map[j][i].piecetype == 'pawn':
                                     n = 0
-                                    while not 0 < n < 5:
-                                        n = input('Promotion !! Rentre 1 pour renne, 2 pour fou, 3 pour cavalier, 4 pour tour :')
+                                    while n == 0:
+                                        n = input('Promotion !!  1- Queen, 2-Bishop, 3-Knight, 4-Rook: ')
                                         try :
-                                            n = int(n)
+                                            1 <= int(n) <= 4
                                         except:
-                                            print("il faut mettre un entier entre 1 et 4")
+                                            print("Entry not valid (must be between 1 and 4)")
                                             n = 0
                                         if n == 1:
-                                            partie.map[j][i] = Renne(joueur)
+                                            self.board.map[j][i] = Queen(player)
                                         elif n == 2:
-                                            partie.map[j][i] = Fou(joueur)
+                                            self.board.map[j][i] = Bishop(player)
                                         elif n == 3:
-                                            partie.map[j][i] = Cavalier(joueur)
+                                            self.board.map[j][i] = Knoght(player)
                                         else:
-                                            partie.map[j][i] = Tour(joueur)
-                                            partie.map[j][i].abouge = True
+                                            self.board.map[j][i] = Rook(player)
+                                            self.board.map[j][i].moved = True
 
-                                # On change de tour, on refait l'echequier propre
-                                for j, i in [selectionee]+role:
-                                    affiche_piece(j, i)
+                                # Change round - new board
+                                updateDisplay([self.selected] + actions)
 
-                                # Comme on change de tour on deselectionne
-                                selectionee = False
-
-                                for piece in partie.piece[joueur]:
-                                    _, mangeable, _, _ = partie.map[piece[0]][piece[1]].deplacement(piece[0], piece[1], partie)
-                                    if partie.roi[adversaire] in mangeable:
-                                        echec = True
+                                for y, x in self.board.piece[player]:
+                                    _, eat, _, _ = self.board.map[y][x].getMove(self.board)
+                                    if self.board.king[not player] in eat:
+                                        self.check = True
                                         break
 
-                                partie.numero_tour += 1
-
-                                joueur = not joueur
-
+                                self.board.roundNumber += 1
+                                self.selected = False
+                                player = not player
                                 played = True
-
-                                print(f'Au tour de {joueur} de joueur')
+                                print(f"It's the round of {player} to play")
 
                     else: # The player decides to cancel his selection
-                       self.board.update_display(self.board.possible_action)
+                       self.board.update_display(self.board.possibleAction)
 
             else:
                 played = True
