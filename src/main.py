@@ -1,10 +1,3 @@
-import os
-import pygame
-
-import matplotlib.image as mpimg
-import numpy as np
-
-from pygame.local import *
 from copy import deepcopy
 
 from classes.bishop import bishop
@@ -14,7 +7,8 @@ from classes.pawn import pawn
 from classes.queen import queen
 from classes.rook import rook
 
-from GUI.plateau import plateau
+from GUI.board import board
+from GUI.game import game
 
 unit = 100
 
