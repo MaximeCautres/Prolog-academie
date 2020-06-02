@@ -59,21 +59,21 @@ class Board:
             mpimg.imsave("background.png", background)
 
             # Creation of the board's visual annexes
-            mpimg.imsave("white_case.png", np.array([[[240, 209, 136] for _ in range(unit)] for _ in range(unit)], dtype=np.uint8))
-            mpimg.imsave("black_case.png", np.array([[[102, 51, 0] for _ in range(unit)] for _ in range(unit)], dtype=np.uint8))
-            mpimg.imsave("movement_case.png", np.array([[[128, 109, 90, 150] for _ in range(unit)] for _ in range(unit)], dtype=np.uint8))
-            mpimg.imsave("eat_case.png", np.array([[[165, 38, 10, 100] for _ in range(unit)] for _ in range(unit)], dtype=np.uint8))
-            mpimg.imsave("select_case.png", np.array([[[1, 215, 88, 80] for _ in range(unit)] for _ in range(unit)], dtype=np.uint8))
-            mpimg.imsave("castling_case.png", np.array([[[255, 215, 0, 60] for _ in range(unit)] for _ in range(unit)], dtype=np.uint8))
+            mpimg.imsave("whiteCase.png", np.array([[[240, 209, 136] for _ in range(unit)] for _ in range(unit)], dtype=np.uint8))
+            mpimg.imsave("blackCase.png", np.array([[[102, 51, 0] for _ in range(unit)] for _ in range(unit)], dtype=np.uint8))
+            mpimg.imsave("movementCase.png", np.array([[[128, 109, 90, 150] for _ in range(unit)] for _ in range(unit)], dtype=np.uint8))
+            mpimg.imsave("eatCase.png", np.array([[[165, 38, 10, 100] for _ in range(unit)] for _ in range(unit)], dtype=np.uint8))
+            mpimg.imsave("selectCase.png", np.array([[[1, 215, 88, 80] for _ in range(unit)] for _ in range(unit)], dtype=np.uint8))
+            mpimg.imsave("castlingCase.png", np.array([[[255, 215, 0, 60] for _ in range(unit)] for _ in range(unit)], dtype=np.uint8))
 
             # We load annexes and background for futur uses
             self.background = pygame.image.load("background.png").convert()
-            self.white_case = pygame.image.load("white_case.png").convert()
-            self.black_case = pygame.image.load("black_case.png").convert()
-            self.movement_case = pygame.image.load("movement_case.png").convert()
-            self.eat_case = pygame.image.load("eat_case.png").convert()
-            self.select_case = pygame.image.load("select_case.png").convert()
-            self.castling_case = pygame.image.load("castling_case.png").convert()
+            self.whiteCase = pygame.image.load("whiteCase.png").convert()
+            self.blackCase = pygame.image.load("blackCase.png").convert()
+            self.movementCase = pygame.image.load("movementCase.png").convert()
+            self.eatCase = pygame.image.load("eatCase.png").convert()
+            self.selectCase = pygame.image.load("selectCase.png").convert()
+            self.castlingCase = pygame.image.load("castlingCase.png").convert()
 
             self.pieces_skin = {
                 'pawn': {True: pygame.transform.scale(pygame.image.load("../pictures/whitePawn.png").convert_alpha(),(int(unit * 0.8), int(unit * 0.8) )), False: pygame.transform.scale(pygame.image.load("../pictures/blackPawn.png").convert_alpha(), (int(unit * 0.8), int(unit * 0.8) ))},
@@ -99,23 +99,24 @@ class Board:
             for couleur in self.pieces:
                 to_update += self.pieces[couleur]
 
-            self.update_display(to_update)
+            self.updateDisplay(to_update)
 
 
-        def apply_selection(self, movement, eat, castling, enPassant):
+        def applySlection(self, selectElement, movement, eat, castling, enPassant):
+            fenetre.blit(selectCase, (selectElement[0] *unit, (7-selectElement[0]) * unit))
             for y, x in movement:
                 fenetre.blit(movemeent_case, (i*unit, (7-j) * unit))
             for y, x in eat:
-                fenetre.blit(eat_case, (i*unit, (7-j) * unit))
+                fenetre.blit(eatCase, (i*unit, (7-j) * unit))
             for y, x in castling:
-                fenetre.blit(castling_case, (i*unit, (7-j) * unit))
+                fenetre.blit(castlingCase, (i*unit, (7-j) * unit))
             for y, x in enPassant:
-                fenetre.blit(eat_case, (i*unit, (7-j) * unit))
+                fenetre.blit(eatCase, (i*unit, (7-j) * unit))
             pygame.display.flip()
 
-        def update_display(self, to_update):
+        def updateDisplay(self, to_update):
             for y, x in to_update:
-                self.window.blit(white_case if (x+y+1)%2 == 0 else black_case,
+                self.window.blit(whiteCase if (x+y+1)%2 == 0 else blackCase,
                 (x * unit, (7-y) * unit))
                 if self.map[y][x] != None:
                     self.window.blit(pieces_skin[self.map[y][x].piecetype][self.map[y][x].couleur],
