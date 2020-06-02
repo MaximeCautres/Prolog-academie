@@ -3,10 +3,10 @@ from copy import deepcopy
 class Game:
     def __init__(self, board):
         self.board = board
-        self.in_game = True
+        self.inGame = True
         self.check = False
 
-    def get_event(self):
+    def getEvent(self):
         for event in pygame.event.get(): # We ask the user to do something 
             if event.type == QUIT: # We close the pygame window
                 pygame.quit()
@@ -15,7 +15,7 @@ class Game:
                 return j, i = 7 - y // unit, x // unit
 
     def launchGame(self):
-        while self.in_game:
+        while self.inGame:
             self.round()
 
     def select(self, yPos, xPos):
@@ -24,23 +24,19 @@ class Game:
             self.board.apply_selection([yPos, xPos], movement, eat, castling, enPassant)
             self.board.selected = [j, i]
             self.board.possible_action = movement + eat + castling + enPassant
-    
-    def round(self):
-        
-        played = False
 
+    def round(self):
+        played = False
         player = (self.board.round_number % 2 == 0)
 
         while not played:
-            event = self.get_event()
+            event = self.getEvent()
             if event:
                 j, i = event
 
                 if not self.board.selected: # If the player hasn't already chosen a piece
                     self.select(j, i)
-
                 else: # If a piece is already selected, the player chose the new piece's place
-                    
                     if [j, i] in role: # The player hase chosen the move
 
                         back_up = deepcopy(self.board)
@@ -49,7 +45,6 @@ class Game:
 
                         if [j, i] in self.board.piece[player]: # if the player decide to castle
                             # it is needed to correctly implement the castling here
-                            
                         else: # normal movement or eat
                             self.board.map[j][i] = deepcopy(self.board.map[self.selected[0]][self.selected[1]])
 
@@ -114,7 +109,7 @@ class Game:
                                 # On change de tour, on refait l'echequier propre
                                 for j, i in [selectionee]+role:
                                     affiche_piece(j, i)
-                                    
+
                                 # Comme on change de tour on deselectionne
                                 selectionee = False
 
@@ -133,11 +128,8 @@ class Game:
                                 print(f'Au tour de {joueur} de joueur')
 
                     else: # The player decides to cancel his selection
-                        
                        self.board.update_display(self.board.possible_action)
-                    
-                    
 
             else:
                 played = True
-                self.in_game = False
+                self.inGame = False
