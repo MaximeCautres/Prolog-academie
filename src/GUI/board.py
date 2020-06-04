@@ -32,7 +32,7 @@ class Board:
         self.map[7][6] = Knight(False, 6, 7)
         self.map[0][2] = Bishop(True, 2, 0)
         self.map[0][5] = Bishop(True, 5, 0)
-        self.map[7][2] = Bishop(False, 7, 2)
+        self.map[7][2] = Bishop(False, 2, 7)
         self.map[7][5] = Bishop(False, 5, 7)
         self.map[0][3] = Queen(True, 3, 0)
         self.map[7][3] = Queen(False, 3, 7)
