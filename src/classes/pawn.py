@@ -1,11 +1,13 @@
+from classes.piece import Piece
+
 class Pawn(Piece):
     def __init__(self, color, xPos, yPos):
-        Piece.__init__(self, color xPos, yPos)
+        Piece.__init__(self, color, xPos, yPos)
         self.piecetype = 'pawn'
         self.moved = -10
 
     # return possible positions
-    def get_move(self, game):
+    def getMove(self, game):
 
         yPos, xPos = self.yPos, self.xPos
 
@@ -18,7 +20,7 @@ class Pawn(Piece):
         times = 1 if self.color else -1
 
         # Movement
-        if 0 <= yPos + times < 8 and carte[yPos + times][xPos] == 0:
+        if 0 <= yPos + times < 8 and mapGame[yPos + times][xPos] == 0:
                 movement += [[yPos + times, xPos]]
                 if yPos == (1 if self.color else 6) and mapGame[yPos + times * 2][xPos] == 0:
                     movement += [[yPos + times * 2, xPos]]
