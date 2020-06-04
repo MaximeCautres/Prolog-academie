@@ -233,7 +233,9 @@ mpimg.imsave("case_roque.png", np.array([[[255, 215, 0, 60] for _ in range(unit)
 fenetre = pygame.display.set_mode((unit*8, unit*8))
 
 fond = pygame.image.load("background.png").convert()
+
 fenetre.blit(fond, (0, 0))
+
 case_beige = pygame.image.load("case_beige.png").convert()
 case_marron = pygame.image.load("case_marron.png").convert()
 case_deplacement = pygame.image.load("case_deplacement.png").convert_alpha()
