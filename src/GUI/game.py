@@ -13,55 +13,53 @@ class Game:
 
     def select(self, yPos, xPos):
         if self.board.map[yPos][xPos] != None and self.board.map[yPos][xPos].color == self.player:
-            movement, eat, castling, enPassant = self.board.map[yPos][xPos].get_move(self.board)
+            movement, eat, castling, enPassant = self.board.map[yPos][xPos].getMove(self.board)
             self.selected = [yPos, xPos]
             self.board.applySelection(self.selected, movement, eat, castling, enPassant)
-            self.board.possibleAction = movement + eat + castling + enPassant
+            self.possibleAction = movement + eat + castling + enPassant
 
     def round(self):
         played = False
-        self.player = (self.board.round_number % 2 == 0)
+        self.player = (self.board.roundNumber % 2 == 0)
 
         while not played:
             event = self.board.getEvent()
             if event:
                 j, i = event
-
                 # If the player hasn't already chosen a piece
                 if not self.selected:
                     self.select(j, i)
                 else: # If a piece is already selected, the player chose the new piece's place
-                    if [j, i] in possibleAction: # The player hase chosen the move
-                        backUp = deepcopy(self.board)
-                        if self.echec:
+                    if [j, i] in self.possibleAction: # The player hase chosen the move
+                        backUpMap, backUpPiece, backUpKing = deepcopy(self.board.map), deepcopy(self.board.pieces), deepcopy(self.board.king)
+                        if self.check:
                             print("your are check")
-                        if [j, i] in self.board.piece[self.player]: # if the self.player decide to castle
+                        if [j, i] in self.board.pieces[self.player]: # if the self.player decide to castle
                             pass
                             # it is needed to correctly implement the castling here
                         else: # normal movement or eat
                             self.board.map[j][i] = deepcopy(self.board.map[self.selected[0]][self.selected[1]])
-                            self.board.map[selected[0]][selected[1]] = None
-                            self.board.piece[joueur].remove(self.selected)
-                            self.board.piece[joueur] += [[j, i]]
+                            self.board.map[self.selected[0]][self.selected[1]] = None
+                            self.board.pieces[self.player].remove(self.selected)
+                            self.board.pieces[self.player] += [[j, i]]
                             self.board.map[j][i].yPos = j
                             self.board.map[j][i].xPos = i
 
                             # If we eat an adversary piece
-                            if [j, i] in self.board.piece[not self.player]:
-                                self.board.piece[not self.player].remove([j,i])
+                            if [j, i] in self.board.pieces[not self.player]:
+                                self.board.pieces[not self.player].remove([j,i])
 
                             # Eat enPassant
-                            if self.board.map[j][i].piecetype == 'pawn' and i != selected[1]:
-                            #and [j - (1 if player else -1), i] in self.board.piece[not player]:
-                                self.board.piece[not self.player].remove([j - (1 if self.player else -1), i])
-                                self.board.map[j - (1 if self.player else - 1)][i] = 0
-                                possibleAction += [[j - (1 if self.player else - 1), i]]
+                            if self.board.map[j][i].piecetype == 'pawn' and i != self.selected[1] and [j - (1 if self.player else -1), i] in self.board.pieces[not self.player]:
+                                self.board.pieces[not self.player].remove([j - (1 if self.player else -1), i])
+                                self.board.map[j - (1 if self.player else - 1)][i] = None
+                                self.possibleAction += [[j - (1 if self.player else - 1), i]]
 
-                            if self.board.map[j][i].piecetype == 'pawn' and abs(j - selectionee[0]) == 2:
-                                self.board.map[j][i].move2 = self.board.roundNumber
+                            if self.board.map[j][i].piecetype == 'pawn' and abs(j - self.selected[0]) == 2:
+                                self.board.map[j][i].bigMove = self.board.roundNumber
 
-                            # If we move the king the castling must be forbiden
-                            if self.board.king[self.player] == selected:
+                                # If we move the king the castling must be forbiden
+                            if self.board.king[self.player] == self.selected:
                                 self.board.king[self.player] = [j, i]
                                 self.board.map[j][i].moved = True
 
@@ -69,14 +67,14 @@ class Game:
                                 self.board.map[j][i].moved = True
 
                             self.check = False
-                            for y, x in self.board.piece[not self.player]:
+                            for y, x in self.board.pieces[not self.player]:
                                 _, eat, _, _ = self.board.map[y][x].getMove(self.board)
                                 if self.board.king[self.player] in eat:
                                     self.check = True
                                     break
 
                             if self.check:
-                                self.board = deepcopy(backUp)
+                                self.board.map, self.board.pieces, self.board.king = deepcopy(backUpMap), deepcopy(backUpPiece), deepcopy(backUpKing)
                             else:
                                 if j == (7 if self.player else 0) and self.board.map[j][i].piecetype == 'pawn':
                                     n = 0
@@ -98,9 +96,9 @@ class Game:
                                             self.board.map[j][i].moved = True
 
                                 # Change round - new board
-                                updateDisplay([self.selected] + actions)
+                                self.board.updateDisplay([self.selected] + self.possibleAction)
 
-                                for y, x in self.board.piece[self.player]:
+                                for y, x in self.board.pieces[self.player]:
                                     _, eat, _, _ = self.board.map[y][x].getMove(self.board)
                                     if self.board.king[not self.player] in eat:
                                         self.check = True
@@ -110,10 +108,11 @@ class Game:
                                 self.selected = False
                                 self.player = not self.player
                                 played = True
-                                print(f"It's the round of {player} to play")
+                                print(f"It's the round of {'white' if self.player else 'black'} to play")
 
                     else: # The player decides to cancel his selection
-                       self.board.update_display(self.board.possibleAction)
+                       self.board.updateDisplay(self.possibleAction + [self.selected])
+                       self.selected = False
 
             else:
                 played = True
