@@ -54,11 +54,9 @@ class Board:
         self.unit = unit
 
     def display(self):
-
         # the window is created
-
         self.window = pygame.display.set_mode((self.unit*8, self.unit*8))
-        
+
         # Creation of the board's visual
         background = np.zeros((self.unit*8, self.unit*8, 3), dtype=np.uint8)
         for i in range(8):
