@@ -1,11 +1,13 @@
+from classes.piece import Piece
+
 class King(Piece):
     def __init__(self, color, xPos, yPos):
-        Piece.__init__(self, xPos, yPos, color)
+        Piece.__init__(self, color, xPos, yPos)
         self.moved = False
         self.piecetype = 'king'
 
     # Return the king position with or without eating
-    def get_move(self, game):
+    def getMove(self, game):
         yPos, xPos = self.yPos, self.xPos
         mapGame = game.map
         eat = []
