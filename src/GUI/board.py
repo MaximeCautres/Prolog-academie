@@ -40,7 +40,7 @@ class Board:
         self.map[7][4] = King(False, 4, 7)
 
         # Initialization of the round_number
-        self.round_number = 0
+        self.roundNumber = 0
 
         # Positions of all the pieces at the beginning of the games.
         # It changes with pieces' moves
@@ -82,10 +82,10 @@ class Board:
         self.background = pygame.image.load("background.png").convert()
         self.whiteCase = pygame.image.load("whiteCase.png").convert()
         self.blackCase = pygame.image.load("blackCase.png").convert()
-        self.movementCase = pygame.image.load("movementCase.png").convert()
-        self.eatCase = pygame.image.load("eatCase.png").convert()
-        self.selectCase = pygame.image.load("selectCase.png").convert()
-        self.castlingCase = pygame.image.load("castlingCase.png").convert()
+        self.movementCase = pygame.image.load("movementCase.png").convert_alpha()
+        self.eatCase = pygame.image.load("eatCase.png").convert_alpha()
+        self.selectCase = pygame.image.load("selectCase.png").convert_alpha()
+        self.castlingCase = pygame.image.load("castlingCase.png").convert_alpha()
 
         self.pieces_skin = {
             'pawn': {True: pygame.transform.scale(pygame.image.load("pictures/whitePawn.png").convert_alpha(),(int(self.unit * 0.8), int(self.unit * 0.8) )), False: pygame.transform.scale(pygame.image.load("pictures/blackPawn.png").convert_alpha(), (int(self.unit * 0.8), int(self.unit * 0.8) ))},
@@ -116,15 +116,15 @@ class Board:
 
 
     def applySelection(self, selectElement, movement, eat, castling, enPassant):
-        self.window.blit(self.selectCase, (selectElement[0] *self.unit, (7-selectElement[0]) * self.unit))
+        self.window.blit(self.selectCase, (selectElement[1] *self.unit, (7-selectElement[0]) * self.unit))
         for y, x in movement:
-            self.window.blit(self.movement_case, (i*self.unit, (7-j) * self.unit))
+            self.window.blit(self.movementCase, (x*self.unit, (7-y) * self.unit))
         for y, x in eat:
-            self.window.blit(self.eatCase, (i*self.unit, (7-j) * self.unit))
+            self.window.blit(self.eatCase, (x*self.unit, (7-y) * self.unit))
         for y, x in castling:
-            self.window.blit(self.castlingCase, (i*self.unit, (7-j) * self.unit))
+            self.window.blit(self.castlingCase, (x*self.unit, (7-y) * self.unit))
         for y, x in enPassant:
-            self.window.blit(self.eatCase, (i*self.unit, (7-j) * self.unit))
+            self.window.blit(self.eatCase, (x*self.unit, (7-y) * self.unit))
         pygame.display.flip()
 
     def updateDisplay(self, to_update):
