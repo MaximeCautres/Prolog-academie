@@ -18,12 +18,12 @@ class Queen(Piece):
 
         cases = [[1, 1], [-1, 1], [-1, -1], [1, -1], [1, 0], [0, 1], [-1, 0], [0, -1]]
 
-        for e1, e2 in cases:
-            di = [[yPos, xPos]]
-            while 0 <= di[-1][0] + e1 < 8 and 0 <= di[-1][1] + e2 < 8 and mapGame[di[-1][0] + e1][di[-1][1] + e2] == 0:
-                di += [[di[-1][0] + e1, di[-1][1] + e2]]
-            if 0 <= di[-1][0] + e1 < 8 and 0 <= di[-1][1] + e2 < 8 and mapGame[di[-1][0] + e1][di[-1][1] + e2].color != self.color:
-                eat += [[di[-1][0] + e1, di[-1][1] + e2]]
-            movement += di[1:]
+        for y, x in cases:
+            directionMovement = [[yPos, xPos]]
+            while 0 <= directionMovement[-1][0] + y < 8 and 0 <= directionMovement[-1][1] + x < 8 and mapGame[directionMovement[-1][0] + y][directionMovement[-1][1] + x] == 0:
+                directionMovement += [[directionMovement[-1][0] + y, directionMovement[-1][1] + x]]
+            if 0 <= directionMovement[-1][0] + y < 8 and 0 <= directionMovement[-1][1] + x < 8 and mapGame[directionMovement[-1][0] + y][directionMovement[-1][1] + x].color != self.color:
+                eat += [[directionMovement[-1][0] + y, directionMovement[-1][1] + x]]
+            movement += directionMovement[1:]
 
         return movement, eat, castling, []
