@@ -13,7 +13,7 @@ class Game:
 
     def select(self, yPos, xPos):
         if self.board.map[yPos][xPos] != None and self.board.map[yPos][xPos].color == self.player:
-            movement, eat, castling, enPassant = self.board.map[yPos][xPos].getMove(self.board)
+            movement, eat, castling, enPassant = self.board.map[yPos][xPos].getMove(self.board, self.check)
             self.selected = [yPos, xPos]
             self.board.applySelection(self.selected, movement, eat, castling, enPassant)
             self.possibleAction = movement + eat + castling + enPassant
@@ -23,7 +23,7 @@ class Game:
         self.player = (self.board.roundNumber % 2 == 0)
 
         while not played:
-            event = self.board.getEvent()
+            event = self.board.Event()
             if event:
                 j, i = event
                 # If the player hasn't already chosen a piece
@@ -68,7 +68,7 @@ class Game:
 
                             self.check = False
                             for y, x in self.board.pieces[not self.player]:
-                                _, eat, _, _ = self.board.map[y][x].getMove(self.board)
+                                _, eat, _, _ = self.board.map[y][x].getMove(self.board, self.check)
                                 if self.board.king[self.player] in eat:
                                     self.check = True
                                     break
@@ -99,7 +99,7 @@ class Game:
                                 self.board.updateDisplay([self.selected] + self.possibleAction)
 
                                 for y, x in self.board.pieces[self.player]:
-                                    _, eat, _, _ = self.board.map[y][x].getMove(self.board)
+                                    _, eat, _, _ = self.board.map[y][x].getMove(self.board, self.check)
                                     if self.board.king[not self.player] in eat:
                                         self.check = True
                                         break
