@@ -28,4 +28,4 @@ class Rook(Piece):
                 castling += [[directionMovement[-1][0] + y, directionMovement[-1][1] + x]]
             movement += directionMovement[1:]
 
-        return movement, eat, castling, []
+        return movement, eat, [], []
