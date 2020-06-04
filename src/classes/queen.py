@@ -1,11 +1,13 @@
+from classes.piece import Piece
+
 class Queen(Piece):
     def __init__(self, color, xPos, yPos):
-        Piece.__init__(self, xPos, yPos, color)
+        Piece.__init__(self, color, xPos, yPos)
         self.colors = color
         self.piecetype = 'queen'
 
     # Return position where can move
-    def get_move(self, game):
+    def getMove(self, game):
 
         yPos, xPos = self.yPos, self.xPos
 
