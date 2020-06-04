@@ -18,7 +18,7 @@ class Knight(Piece):
         cases = [[2, 1], [2, -1], [-2, 1], [-2, -1], [1, 2], [1, -2], [-1, 2], [-1, -2]]
 
         for y, x in cases:
-            if 0 <= yPos + y < 8 and 0 <= xPos + x < 8 and mapGame[yPos + y][xPos + x] == 0:
+            if 0 <= yPos + y < 8 and 0 <= xPos + x < 8 and mapGame[yPos + y][xPos + x] == None:
                 movement += [[yPos + y, xPos + x]]
             elif 0 <= yPos + y < 8 and 0 <= xPos + x < 8 and mapGame[yPos + y][xPos + x].color != self.color:
                 eat += [[yPos +y, xPos + x]]
