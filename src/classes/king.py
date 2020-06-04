@@ -16,10 +16,10 @@ class King(Piece):
 
         cases = [[1, 0], [1, 1], [0, 1], [-1, 1], [-1, 0], [-1, -1], [0, -1], [1, -1]]
 
-        for e1, e2 in cases:
-            if 0 <= yPos + e1 < 8 and 0 <= xPos + e2 < 8 and mapGame[yPos + e1][xPos + e2] == 0:
-                movement += [[yPos + e1, xPos + e2]]
-            elif 0 <= yPos + e1 < 8 and 0 <= xPos + e2 < 8 and mapGame[yPos + e1][xPos + e2].color != self.color:
-                eat += [[yPos + e1, xPos + e2]]
+        for y, x in cases:
+            if 0 <= yPos + y < 8 and 0 <= xPos + x < 8 and mapGame[yPos + y][xPos + x] == 0:
+                movement += [[yPos + y, xPos + x]]
+            elif 0 <= yPos + y < 8 and 0 <= xPos + x < 8 and mapGame[yPos + y][xPos + x].color != self.color:
+                eat += [[yPos + y, xPos + x]]
 
         return movement, eat, castling, []
