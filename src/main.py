@@ -1,3 +1,5 @@
+import pygame
+
 from copy import deepcopy
 
 from classes.bishop import Bishop
@@ -13,4 +15,10 @@ from GUI.game import Game
 unit = 100
 
 if __name__ == "__main__":
+
     pygame.init()
+
+    board = Board(unit)
+    board.display()
+    game = Game(board)
+    game.launchGame()
