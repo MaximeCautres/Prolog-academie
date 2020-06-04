@@ -1,11 +1,13 @@
+from classes.piece import Piece
+
 class Rook(Piece):
     def __init__(self, color, xPos, yPos):
-        Piece.__init__(self, xPos, yPos, color)
+        Piece.__init__(self, color, xPos, yPos)
         self.moved = False
-        self.piecetype = 'tour'
+        self.piecetype = 'rook'
 
     # On retourne les position ou peu se déplacer la tour avec ou sans manger
-    def get_move(self, game):
+    def getMove(self, game):
 
         yPos, xPos = self.yPos, self.xPos
 
