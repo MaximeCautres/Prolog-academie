@@ -6,7 +6,7 @@ class Knight(Piece):
         self.piecetype = 'knight'
 
     # Return movement where the knight can move
-    def getMove(self, game):
+    def getMove(self, game, check):
 
         yPos, xPos = self.yPos, self.xPos
 

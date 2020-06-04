@@ -8,7 +8,7 @@ class Pawn(Piece):
         self.bigMove = - 10
 
     # return possible positions
-    def getMove(self, game):
+    def getMove(self, game, check):
 
         yPos, xPos = self.yPos, self.xPos
 

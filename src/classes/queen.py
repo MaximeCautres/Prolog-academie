@@ -7,7 +7,7 @@ class Queen(Piece):
         self.piecetype = 'queen'
 
     # Return position where can move
-    def getMove(self, game):
+    def getMove(self, game, check):
 
         yPos, xPos = self.yPos, self.xPos
 

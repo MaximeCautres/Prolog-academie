@@ -7,7 +7,7 @@ class King(Piece):
         self.piecetype = 'king'
 
     # Return the king position with or without eating
-    def getMove(self, game):
+    def getMove(self, game, check):
         yPos, xPos = self.yPos, self.xPos
         mapGame = game.map
         eat = []
