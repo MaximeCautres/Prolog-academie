@@ -3,4 +3,4 @@ class Piece:
         self.color = color
         self.xPos = xPos
         self.yPos = yPos
-        self.pieceType = pieceType
+
