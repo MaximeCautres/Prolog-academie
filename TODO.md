@@ -1,6 +1,6 @@
-# TODO
++# TODO
 
-- [ ] Fix castling, this evening !!  
+- [ ] Fix castling, soon finished, just understanding why the check on the direction isn't working correctly  
 - [x] Séparate classes in distincts folders  
 - [x] Séparate GUI in a new folder  
 - [ ] Review the conception:  
