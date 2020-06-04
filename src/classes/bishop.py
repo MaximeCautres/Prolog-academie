@@ -17,7 +17,7 @@ class Bishop(Piece):
 
         for y, x in cases:
             directionMovement = [[yPos, xPos]]
-            while 0 <= directionMovement[-1][0] + y < 8 and 0 <= directionMovement[-1][1] + x < 8 and mapGame[directionMovement[-1][0] + y][directionMovement[-1][1] + x] == 0:
+            while 0 <= directionMovement[-1][0] + y < 8 and 0 <= directionMovement[-1][1] + x < 8 and mapGame[directionMovement[-1][0] + y][directionMovement[-1][1] + x] == None:
                 directionMovement += [[directionMovement[-1][0] + y, directionMovement[-1][1] + x]]
             if 0 <= directionMovement[-1][0] + y < 8 and 0 <= directionMovement[-1][1] + x < 8 and mapGame[directionMovement[-1][0] + y][directionMovement[-1][1] + x].color != self.color:
                 eat += [[directionMovement[-1][0] + y, directionMovement[-1][1] + x]]
