@@ -1,10 +1,12 @@
+from classes.piece import Piece
+
 class Knight(Piece):
     def __init__(self, color, xPos, yPos):
         Piece.__init__(self, color, xPos, yPos)
         self.piecetype = 'knight'
 
     # Return movement where the knight can move
-    def get_move(self, game):
+    def getMove(self, game):
 
         yPos, xPos = self.yPos, self.xPos
 
