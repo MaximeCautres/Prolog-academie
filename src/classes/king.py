@@ -27,16 +27,16 @@ class King(Piece):
             check_confirmation = False
                   
             for y, x in game.pieces[not self.color]:
-                _, eat, _, _ = mapGame[y][x].getMove(game, True)
-                if [j, i] in eat:
-                    check_confirmation = True
-                    break
-            return check_confirmation
+                movement, _, _, _ = mapGame[y][x].getMove(game, True)
+                if [j, i] in movement:
+                    return True
+            return False
 
         # small castling (right one)
         
         if not check and not self.moved and mapGame[yPos][7] != None and mapGame[yPos][7].piecetype == 'rook' and not mapGame[yPos][7].moved and mapGame[yPos][7].color == self.color and mapGame[yPos][5] == None and mapGame[yPos][6] == None and not is_check(yPos, 5) and not is_check(yPos, 6):
             castling += [[yPos, 6]]
+            print(is_check(yPos, 5), is_check(yPos, 6))
 
         # big casling (left one)
 
