@@ -1,5 +1,12 @@
 from copy import deepcopy
 
+from classes.bishop import Bishop
+from classes.king import King
+from classes.knight import Knight
+from classes.pawn import Pawn
+from classes.queen import Queen
+from classes.rook import Rook
+
 class Game:
     def __init__(self, board):
         self.board = board
@@ -87,7 +94,7 @@ class Game:
                                 self.board.pieces[not self.player].remove([j,i])
 
                             # Eat enPassant
-                            if self.board.map[j][i].piecetype == 'pawn' and i != self.selected[1] and [j - (1 if self.player else -1), i] in self.board.pieces[not self.player]:
+                            elif self.board.map[j][i].piecetype == 'pawn' and i != self.selected[1] and [j - (1 if self.player else -1), i] in self.board.pieces[not self.player]:
                                 self.board.pieces[not self.player].remove([j - (1 if self.player else -1), i])
                                 self.board.map[j - (1 if self.player else - 1)][i] = None
                                 self.possibleAction += [[j - (1 if self.player else - 1), i]]
@@ -115,22 +122,23 @@ class Game:
                             else:
                                 if j == (7 if self.player else 0) and self.board.map[j][i].piecetype == 'pawn':
                                     n = 0
-                                    while n == 0:
+                                    while not 0 < n < 5:
                                         n = input('Promotion !!  1- Queen, 2-Bishop, 3-Knight, 4-Rook: ')
                                         try :
-                                            1 <= int(n) <= 4
+                                            n = int(n)
                                         except:
                                             print("Entry not valid (must be between 1 and 4)")
                                             n = 0
-                                        if n == 1:
-                                            self.board.map[j][i] = Queen(self.player)
-                                        elif n == 2:
-                                            self.board.map[j][i] = Bishop(self.player)
-                                        elif n == 3:
-                                            self.board.map[j][i] = Knoght(self.player)
-                                        else:
-                                            self.board.map[j][i] = Rook(self.player)
-                                            self.board.map[j][i].moved = True
+                                            
+                                    if n == 1:
+                                        self.board.map[j][i] = Queen(self.player, i, j)
+                                    elif n == 2:
+                                        self.board.map[j][i] = Bishop(self.player, i, j)
+                                    elif n == 3:
+                                        self.board.map[j][i] = Knoght(self.player, i, j)
+                                    else:
+                                        self.board.map[j][i] = Rook(self.player, i, j)
+                                        self.board.map[j][i].moved = True
 
                                 # Change round - new board
                                 self.board.updateDisplay([self.selected] + self.possibleAction)
