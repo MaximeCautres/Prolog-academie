@@ -12,7 +12,7 @@ from classes.rook import Rook
 from GUI.board import Board
 from GUI.game import Game
 
-unit = 100
+unit = 140
 
 if __name__ == "__main__":
 
