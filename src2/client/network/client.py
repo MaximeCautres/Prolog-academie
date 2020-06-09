@@ -40,7 +40,7 @@ class Client():
             
     def sendEvent(self, event):
         if event:
-            self.mySocket.send(f"{y} {x}".encode("Utf8"))
+            self.mySocket.send(str(event).encode("Utf8"))
         else:
             self.mySocket.send("False".encode("Utf8"))
         
@@ -64,6 +64,9 @@ class Client():
     def recvPawnArrival(self):
         return eval(self.mySocket.recv(1024).decode("Utf8"))
 
+    def recvChange(self):
+        return eval(self.mySocket.recv(1024).decode("Utf8"))
+    
     def recvCheck(self):
         return eval(self.mySocket.recv(1024).decode("Utf8"))
 
