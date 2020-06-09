@@ -100,7 +100,7 @@ class Server():
 
     # Share the suppression of a piece to all the client
     
-    def sendPieceSuppression(self, l): #[[j, i],]
+    def sendPieceSuppression(self, l): #[[color, j, i],]
         self.player[False].send("PieceSuppression".encode("Utf8")) # signal
 
         self.player[False].send(str(l).encode("Utf8"))
@@ -111,15 +111,30 @@ class Server():
 
     # Share the pawn arrival process, choose what you want
     
-    def sendPawnArrival(self, j, i):
-        self.player[True].send("PawnArrival".encode("Utf8")) # signal
+    def sendPawnArrival(self, color, j, i): # return n the chosen piece
+        self.player[color].send("PawnArrival".encode("Utf8")) # signal
         
-        self.player[True].send(str([j, i]).encode("Utf8"))
+        self.player[color].send(str([j, i]).encode("Utf8"))
 
+        return eval(self.player[True].recv(1024).decode("Utf8"))
+
+    
+    def sendChange(self, color, j, i, piece): # affect the change of both player
+        self.player[True].send("Change".encode("Utf8")) # signal
+
+        self.player[True].send(str([j, i, piece]).encode("Utf8"))
+
+        self.player[False].send("Change".encode("Utf8")) # signal
+
+        self.player[False].send(str([j, i, piece]).encode("Utf8"))
+
+        
     # Print your check on the client terminal
     
     def sendCheck(self, color):
         self.player[color].send("Check".encode("Utf8")) # signal
         
+    def sendEndGame(self):
+        self.player[True].send("EndGame".encode("Utf8")) # signal
+        self.player[True].send("EndGame".encode("Utf8")) # signal
 
-    
