@@ -28,29 +28,56 @@ class Game:
             self.board.applySelection(selectElement, movement, eat, castling, enPassant)
 
         if what_action == "UpdateDisplay": # The round is finish, time to update the board
-            to_update = self.client.recvUpdateDisplay() 
+            to_update = self.client.recvInformation() 
             
             self.board.updateDisplay(to_update)
             
         if what_action == "PieceMovement":
-            moves = self.client.recvPieceMovement()
+            moves = self.client.recvInformation()
 
             ''' Sur les client plus la peine d'avoir des objet dans le tableau!!!!!! Plus que les piectype <3 <3 <3 <3 Il faudra ensuite adapter les fonction d'affichage au faite que c'est ça mais nikel que ça marche'''
 
             for newJ, newI, oldJ, oldI in moves:
                 self.board.map[newJ][newI] = deepcopy(self.board.map[oldJ][I])
                 self.board.map[oldJ][oldI] = None
+
+                self.board.pieces[self.client.color].remove([oldJ, oldI])
+                self.board.pieces[self.client.color] += [[newJ, newI]]
             
-
-
         if what_action == "PieceSuppression":
+            suppr = self.client.recvInformation()
+
+            for color, j, i in suppr:
+                self.board.pieces[color].remove([j, i])
 
 
         if what_action == "PawnArrival":
+            j, i = self.client.recvInformation()
 
+            n = 0
+            while not 0 < n < 5:
+                n = input(
+                    "Promotion !!  1- Queen, 2-Bishop, 3-Knight, 4-Rook: "
+                )
+                try:
+                    n = int(n)
+                except:
+                    print(
+                        "Entry not valid (must be between 1 and 4)"
+                    )
+                    n = 0
+
+            self.client.sendEvent(n)
+
+        if what_action == "Change":
+            j, i, piece = self.client.recvInformation()
+            board[j, i] = (piece, self.client.color)
 
         if what_action == 'Check':
             print("You are check, protect your king!")
+
+        if what_action == "EndGame":
+            self.inGame = False
 
             
         
