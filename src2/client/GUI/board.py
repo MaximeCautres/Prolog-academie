@@ -9,14 +9,6 @@ import matplotlib.image as mpimg
 
 from pygame.locals import *
 
-from classes.bishop import Bishop
-from classes.king import King
-from classes.knight import Knight
-from classes.pawn import Pawn
-from classes.queen import Queen
-from classes.rook import Rook
-
-
 class Board:
     def __init__(self, unit):
         # Create the table which represents the board
@@ -24,27 +16,24 @@ class Board:
 
         # Initialization of the board with all the pieces
         for x in range(8):
-            self.map[1][x] = Pawn(True, x, 1)
-            self.map[6][x] = Pawn(False, x, 6)
-        self.map[0][0] = Rook(True, 0, 0)
-        self.map[0][7] = Rook(True, 7, 0)
-        self.map[7][0] = Rook(False, 0, 7)
-        self.map[7][7] = Rook(False, 7, 7)
-        self.map[0][1] = Knight(True, 1, 0)
-        self.map[0][6] = Knight(True, 6, 0)
-        self.map[7][1] = Knight(False, 1, 7)
-        self.map[7][6] = Knight(False, 6, 7)
-        self.map[0][2] = Bishop(True, 2, 0)
-        self.map[0][5] = Bishop(True, 5, 0)
-        self.map[7][2] = Bishop(False, 2, 7)
-        self.map[7][5] = Bishop(False, 5, 7)
-        self.map[0][3] = Queen(True, 3, 0)
-        self.map[7][3] = Queen(False, 3, 7)
-        self.map[0][4] = King(True, 4, 0)
-        self.map[7][4] = King(False, 4, 7)
-
-        # Initialization of the round_number
-        self.roundNumber = 0
+            self.map[1][x] = ('pawn', True)
+            self.map[6][x] = ('pawn', False)
+        self.map[0][0] = ('rook', True)
+        self.map[0][7] = ('rook', True)
+        self.map[7][0] = ('rook', False)
+        self.map[7][7] = ('rook', False)
+        self.map[0][1] = ('knight', True)
+        self.map[0][6] = ('knight', True)
+        self.map[7][1] = ('knight', False)
+        self.map[7][6] = ('knight', False)
+        self.map[0][2] = ('bishop', True)
+        self.map[0][5] = ('bishop', True)
+        self.map[7][2] = ('bishop', False)
+        self.map[7][5] = ('bishop', False)
+        self.map[0][3] = ('queen', True)
+        self.map[7][3] = ('queen', False)
+        self.map[0][4] = ('king', True)
+        self.map[7][4] = ('king', False)
 
         # Positions of all the pieces at the beginning of the games.
         # It changes with pieces' moves
@@ -53,8 +42,6 @@ class Board:
             False: [[6, x] for x in range(8)] + [[7, x] for x in range(8)],
         }
 
-        # The kings will need to be track during the game for the check detection
-        self.king = {True: [0, 4], False: [7, 4]}
         self.unit = unit
 
     def display(self):
@@ -250,7 +237,7 @@ class Board:
             )
             if self.map[y][x] != None:
                 self.window.blit(
-                    self.pieces_skin[self.map[y][x].piecetype][self.map[y][x].color],
+                    self.pieces_skin[self.map[y][x][0]][self.map[y][x][1]],
                     (int((x + 0.1) * self.unit), int((7 - y + 0.1) * self.unit)),
                 )
 
