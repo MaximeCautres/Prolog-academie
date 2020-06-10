@@ -15,7 +15,7 @@ from classes.rook import Rook
 
 
 class Board:
-    def __init__(self, unit):
+    def __init__(self):
         # Create the table which represents the board
         self.map = [[None for _ in range(8)] for _ in range(8)]
 
@@ -52,6 +52,3 @@ class Board:
 
         # The kings will need to be track during the game for the check detection
         self.king = {True: [0, 4], False: [7, 4]}
-        self.unit = unit
-
-    

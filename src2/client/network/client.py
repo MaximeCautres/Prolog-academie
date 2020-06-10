@@ -37,6 +37,9 @@ class Client():
             self.color = ("1" == msgServer2)
 
     # beginning of the communication function
+
+    def recvSignal(self):
+        return self.mySocket.recv(1024).decode("Utf8")
             
     def sendEvent(self, event):
         if event:
@@ -45,11 +48,18 @@ class Client():
             self.mySocket.send("False".encode("Utf8"))
         
     def recvApplySelection(self):
+        self.mySocket.send("ok".encode("Utf8"))
         selectElement = eval(self.mySocket.recv(1024).decode("Utf8"))
+        self.mySocket.send("ok".encode("Utf8"))
         movement = eval(self.mySocket.recv(1024).decode("Utf8"))
+        self.mySocket.send("ok".encode("Utf8"))
         eat = eval(self.mySocket.recv(1024).decode("Utf8"))
+        self.mySocket.send("ok".encode("Utf8"))
         castling = eval(self.mySocket.recv(1024).decode("Utf8"))
+        self.mySocket.send("ok".encode("Utf8"))
         enPassant = eval(self.mySocket.recv(1024).decode("Utf8"))
+        self.mySocket.send("ok".encode("Utf8"))
+        
         return selectElement, movement, eat, castling, enPassant
 
     def recvUpdateDisplay(self):
@@ -71,7 +81,11 @@ class Client():
         return eval(self.mySocket.recv(1024).decode("Utf8"))
 
     def recvInformation(self): # Should be capable of remplacing all the other one:
-        return eval(mySocket.recv(1024).decode("Utf8"))
+        self.mySocket.send("ok".encode("Utf8"))
+        info = eval(self.mySocket.recv(1024).decode("Utf8"))
+        self.mySocket.send("ok".encode("Utf8"))
+
+        return info
         
 
     

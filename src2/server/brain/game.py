@@ -17,6 +17,8 @@ class Game:
         self.check = False
         self.selected = False
         self.server = server
+        self.move = []
+        self.eat = []
 
     def launchGame(self):
         while self.inGame:
@@ -32,7 +34,6 @@ class Game:
             )
             self.selected = [yPos, xPos]
             
-            self.board.applySelection(self.selected, movement, eat, castling, enPassant)
             self.server.sendApplySelection(self.player, self.selected, movement, eat, castling, enPassant) # share the change to the corresponding client
 
             self.possibleAction = movement + eat + castling + enPassant
@@ -52,6 +53,8 @@ class Game:
                     self.select(j, i)
                 else:  # If a piece is already selected, the player chose the new piece's place
                     if [j, i] in self.possibleAction:  # The player hase chosen the move
+                        self.move = []
+                        self.eat = []
                         backUpMap, backUpPiece, backUpKing = (
                             deepcopy(self.board.map),
                             deepcopy(self.board.pieces),
@@ -59,6 +62,7 @@ class Game:
                         )
                         if self.check:
                             print("your are check")
+                            self.server.sendCheck(self.player)
                         if (
                             self.board.map[self.selected[0]][self.selected[1]].piecetype
                             == "king"
@@ -94,7 +98,12 @@ class Game:
 
                             self.board.king[self.player] = [j, i]
 
-                            self.board.updateDisplay(
+                            self.move = [[self.player, j, i, *self.selected], [self.player, j, 4 + int(side/2), j, 7 if side > 0 else 0]]
+                            self.eat = []
+
+                            self.server.sendPieceMovement(self.move)
+
+                            self.server.sendUpdateDisplay(
                                 [self.selected]
                                 + self.possibleAction
                                 + [[j, i - int(side / 2)], [j, 7 if side > 0 else 0]]
@@ -116,7 +125,7 @@ class Game:
                                 f"It's the round of {'white' if self.player else 'black'} to play"
                             )
 
-                            # it is needed to correctly implement the castling here
+                            
                         else:  # normal movement or eat
                             self.board.map[j][i] = deepcopy(
                                 self.board.map[self.selected[0]][self.selected[1]]
@@ -134,6 +143,8 @@ class Game:
                             if [j, i] in self.board.pieces[not self.player]:
                                 self.board.pieces[not self.player].remove([j, i])
 
+                                self.eat += [[not self.player, j, i]]
+
                             # Eat enPassant
                             elif (
                                 self.board.map[j][i].piecetype == "pawn"
@@ -148,6 +159,12 @@ class Game:
                                 self.possibleAction += [
                                     [j - (1 if self.player else -1), i]
                                 ]
+                                # We move the pawn one behind to have a normale heat after
+                                self.move += [[not self.player, j, i, j-(1 if self.player else -1), i]]
+                                self.eat += [[not self.player, j, i]]
+
+                            # We save the move
+                            self.move += [[self.player, j, i, *self.selected]]
 
                             if (
                                 self.board.map[j][i].piecetype == "pawn"
@@ -183,31 +200,33 @@ class Game:
                                     j == (7 if self.player else 0)
                                     and self.board.map[j][i].piecetype == "pawn"
                                 ):
-                                    n = 0
-                                    while not 0 < n < 5:
-                                        n = input(
-                                            "Promotion !!  1- Queen, 2-Bishop, 3-Knight, 4-Rook: "
-                                        )
-                                        try:
-                                            n = int(n)
-                                        except:
-                                            print(
-                                                "Entry not valid (must be between 1 and 4)"
-                                            )
-                                            n = 0
+                                    
+                                    # Here we check the promotion case
+                                    
+                                    n = self.server.sendPawnArrival(self.player, j, i)
+                                    # we have now the selected piece
 
                                     if n == 1:
                                         self.board.map[j][i] = Queen(self.player, i, j)
                                     elif n == 2:
                                         self.board.map[j][i] = Bishop(self.player, i, j)
                                     elif n == 3:
-                                        self.board.map[j][i] = Knoght(self.player, i, j)
+                                        self.board.map[j][i] = Knight(self.player, i, j)
                                     else:
                                         self.board.map[j][i] = Rook(self.player, i, j)
                                         self.board.map[j][i].moved = True
 
+                                    # Time to send the chosen piece to both player
+                                        
+                                    self.server.sendChange(self.player, j, i, "queen" if n == 1 else ("bishop" if n == 2 else ("knight" if n == 3 else 'rook')))
+
+                                # here we send the new positions
+                                    
+                                self.server.sendPieceMovement(self.move)
+                                self.server.sendPieceSuppression(self.eat)
+                                    
                                 # Change round - new board
-                                self.board.updateDisplay(
+                                self.server.sendUpdateDisplay(
                                     [self.selected] + self.possibleAction
                                 )
 
@@ -228,9 +247,10 @@ class Game:
                                 )
 
                     else:  # The player decides to cancel his selection
-                        self.board.updateDisplay(self.possibleAction + [self.selected])
+                        self.server.sendUpdateDisplay(self.possibleAction + [self.selected])
                         self.selected = False
 
             else:
                 played = True
                 self.inGame = False
+                self.server.sendEndGame()

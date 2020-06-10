@@ -56,9 +56,9 @@ class Server():
         
         self.player[color].send('Event'.encode("Utf8")) #signal
 
-        event = self.player[color].recv(1024).decode("Utf8")
-        if event != "False":
-            j, i = coordonate[0], coordonate[2]
+        event = eval(self.player[color].recv(1024).decode("Utf8"))
+        if event != False:
+            j, i = event
             return j, i
         else:
             return False
@@ -66,75 +66,109 @@ class Server():
     # share all the piece to color after a selectioon to the corresponding client
 
     def sendApplySelection(self, color, selectElement, movement, eat, castling, enPassant):
-        self.player[color].send("ApplySelection") # signal
-        
+        self.player[color].send("ApplySelection".encode("Utf8")) # signal
+        self.player[color].recv(1024).decode("Utf8")
         self.player[color].send(str(selectElement).encode("Utf8"))
+        self.player[color].recv(1024).decode("Utf8")
         self.player[color].send(str(movement).encode("Utf8"))
+        self.player[color].recv(1024).decode("Utf8")
         self.player[color].send(str(eat).encode("Utf8"))
+        self.player[color].recv(1024).decode("Utf8")
         self.player[color].send(str(castling).encode("Utf8"))
+        self.player[color].recv(1024).decode("Utf8")
         self.player[color].send(str(enPassant).encode("Utf8"))
+        self.player[color].recv(1024).decode("Utf8")
 
         return 
 
     # Share the update to all the client
     
     def sendUpdateDisplay(self, to_update):
+        print("Update Display")
         self.player[True].send("UpdateDisplay".encode("Utf8")) # signal
+        self.player[True].recv(1024).decode("Utf8")
 
         self.player[True].send(str(to_update).encode("Utf8"))
+        self.player[True].recv(1024).decode("Utf8")
         
         self.player[False].send("UpdateDisplay".encode("Utf8")) # signal
-        
+        self.player[False].recv(1024).decode("Utf8")
+
         self.player[False].send(str(to_update).encode("Utf8"))
+        self.player[False].recv(1024).decode("Utf8")
 
     # share the movement of a piece to the client
 
-    def sendPieceMouvement(self, l): # [[newJ, newI, oldJ, oldI], ]
+    def sendPieceMovement(self, l): # [[color, newJ, newI, oldJ, oldI], ]
+        print("Piece Movement")
         self.player[True].send("PieceMovement".encode("Utf8")) # signal
-        
+        self.player[True].recv(1024).decode("Utf8")
+
         self.player[True].send(str(l).encode("Utf8"))
+        self.player[True].recv(1024).decode("Utf8")
 
         self.player[False].send("PieceMovement".encode("Utf8")) # signal
+        self.player[False].recv(1024).decode("Utf8")        
         
         self.player[False].send(str(l).encode("Utf8"))
+        self.player[False].recv(1024).decode("Utf8")
 
     # Share the suppression of a piece to all the client
     
     def sendPieceSuppression(self, l): #[[color, j, i],]
+        print("Piece Suppression")
+        
         self.player[False].send("PieceSuppression".encode("Utf8")) # signal
+        self.player[False].recv(1024).decode("Utf8")
 
         self.player[False].send(str(l).encode("Utf8"))
+        self.player[False].recv(1024).decode("Utf8")
 
         self.player[True].send("PieceSuppression".encode("Utf8")) # signal
+        self.player[True].recv(1024).decode("Utf8")
         
         self.player[True].send(str(l).encode("Utf8"))
+        self.player[True].recv(1024).decode("Utf8")
 
     # Share the pawn arrival process, choose what you want
     
     def sendPawnArrival(self, color, j, i): # return n the chosen piece
+        print("PawnArrival")
         self.player[color].send("PawnArrival".encode("Utf8")) # signal
+        self.player[color].recv(1024).decode("Utf8")
         
         self.player[color].send(str([j, i]).encode("Utf8"))
+        self.player[color].recv(1024).decode("Utf8")
 
-        return eval(self.player[True].recv(1024).decode("Utf8"))
+        return  eval(self.player[True].recv(1024).decode("Utf8"))
+        
 
     
     def sendChange(self, color, j, i, piece): # affect the change of both player
+        print("Change Piece")
         self.player[True].send("Change".encode("Utf8")) # signal
+        self.player[True].recv(1024).decode("Utf8")
 
-        self.player[True].send(str([j, i, piece]).encode("Utf8"))
+        self.player[True].send(str([color, j, i, piece]).encode("Utf8"))
+        self.player[True].recv(1024).decode("Utf8")
 
         self.player[False].send("Change".encode("Utf8")) # signal
+        self.player[False].recv(1024).decode("Utf8")
 
-        self.player[False].send(str([j, i, piece]).encode("Utf8"))
+        self.player[False].send(str([color, j, i, piece]).encode("Utf8"))
+        self.player[False].recv(1024).decode("Utf8")
 
         
     # Print your check on the client terminal
     
     def sendCheck(self, color):
+        print("Check")
         self.player[color].send("Check".encode("Utf8")) # signal
+        self.player[color].recv(1024).decode("Utf8")
         
     def sendEndGame(self):
+        print("EndGame")
         self.player[True].send("EndGame".encode("Utf8")) # signal
-        self.player[True].send("EndGame".encode("Utf8")) # signal
+        self.player[False].send("EndGame".encode("Utf8")) # signal
+
 

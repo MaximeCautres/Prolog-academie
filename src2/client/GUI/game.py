@@ -5,7 +5,6 @@ class Game:
         self.board = board
         self.client = client
         self.inGame = True
-        self.selected
 
     def launchGame(self):
         while self.inGame:
@@ -13,10 +12,12 @@ class Game:
 
     def task(self): # a list of task
 
-        what_action = self.client.received_action() # the filter to know which task will be done
+        what_action = self.client.recvSignal() # the filter to know which task will be done
 
         if what_action == "Event": # The player will select a piece
-        
+
+            print("It's your turn")
+            
             event = self.board.getEvent()
 
             self.client.sendEvent(event)
@@ -35,14 +36,12 @@ class Game:
         if what_action == "PieceMovement":
             moves = self.client.recvInformation()
 
-            ''' Sur les client plus la peine d'avoir des objet dans le tableau!!!!!! Plus que les piectype <3 <3 <3 <3 Il faudra ensuite adapter les fonction d'affichage au faite que c'est ça mais nikel que ça marche'''
-
-            for newJ, newI, oldJ, oldI in moves:
-                self.board.map[newJ][newI] = deepcopy(self.board.map[oldJ][I])
+            for color, newJ, newI, oldJ, oldI in moves:
+                self.board.map[newJ][newI] = deepcopy(self.board.map[oldJ][oldI])
                 self.board.map[oldJ][oldI] = None
 
-                self.board.pieces[self.client.color].remove([oldJ, oldI])
-                self.board.pieces[self.client.color] += [[newJ, newI]]
+                self.board.pieces[color].remove([oldJ, oldI])
+                self.board.pieces[color] += [[newJ, newI]]
             
         if what_action == "PieceSuppression":
             suppr = self.client.recvInformation()
@@ -70,14 +69,17 @@ class Game:
             self.client.sendEvent(n)
 
         if what_action == "Change":
-            j, i, piece = self.client.recvInformation()
-            board[j, i] = (piece, self.client.color)
+            color, j, i, piece = self.client.recvInformation()
+            print(piece)
+            self.board.map[j][i] = (piece, color)
 
         if what_action == 'Check':
             print("You are check, protect your king!")
+            self.client.sendEvent("go")
 
         if what_action == "EndGame":
             self.inGame = False
+            print("EndGame")
 
             
         

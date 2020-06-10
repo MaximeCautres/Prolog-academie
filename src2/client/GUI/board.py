@@ -10,10 +10,10 @@ import matplotlib.image as mpimg
 from pygame.locals import *
 
 class Board:
-    def __init__(self, unit):
+    def __init__(self, unit, color):
         # Create the table which represents the board
         self.map = [[None for _ in range(8)] for _ in range(8)]
-
+        
         # Initialization of the board with all the pieces
         for x in range(8):
             self.map[1][x] = ('pawn', True)
@@ -43,6 +43,7 @@ class Board:
         }
 
         self.unit = unit
+        self.color = color
 
     def display(self):
         # the window is created
@@ -194,9 +195,9 @@ class Board:
         }
 
         # We clean the repository
-        os.system(
+        """os.system(
             "rm background.png whiteCase.png blackCase.png eatCase.png movementCase.png castlingCase.png selectCase.png"
-        )
+        )"""
 
         # We initialize the pygame window
         # pygame.init()
@@ -217,28 +218,28 @@ class Board:
     def applySelection(self, selectElement, movement, eat, castling, enPassant):
         self.window.blit(
             self.selectCase,
-            (selectElement[1] * self.unit, (7 - selectElement[0]) * self.unit),
+            ((selectElement[1] if self.color else (7 - selectElement[1])) * self.unit, ((7 - selectElement[0]) if self.color else selectElement[0]) * self.unit),
         )
         for y, x in movement:
-            self.window.blit(self.movementCase, (x * self.unit, (7 - y) * self.unit))
+            self.window.blit(self.movementCase, ((x if self.color else (7-x)) * self.unit, ((7 - y) if self.color else y) * self.unit))
         for y, x in eat:
-            self.window.blit(self.eatCase, (x * self.unit, (7 - y) * self.unit))
+            self.window.blit(self.eatCase, ((x if self.color else (7-x)) * self.unit, ((7 - y) if self.color else y) * self.unit))
         for y, x in castling:
-            self.window.blit(self.castlingCase, (x * self.unit, (7 - y) * self.unit))
+            self.window.blit(self.castlingCase, ((x if self.color else (7-x)) * self.unit, ((7 - y) if self.color else y) * self.unit))
         for y, x in enPassant:
-            self.window.blit(self.eatCase, (x * self.unit, (7 - y) * self.unit))
+            self.window.blit(self.eatCase, ((x if self.color else (7-x)) * self.unit, ((7 - y) if self.color else y) * self.unit))
         pygame.display.flip()
 
     def updateDisplay(self, to_update):
         for y, x in to_update:
             self.window.blit(
                 self.whiteCase if (x + y + 1) % 2 == 0 else self.blackCase,
-                (x * self.unit, (7 - y) * self.unit),
+                ((x if self.color else (7-x)) * self.unit, ((7 - y) if self.color else y) * self.unit),
             )
             if self.map[y][x] != None:
                 self.window.blit(
                     self.pieces_skin[self.map[y][x][0]][self.map[y][x][1]],
-                    (int((x + 0.1) * self.unit), int((7 - y + 0.1) * self.unit)),
+                    (int(((x if self.color else (7-x)) + 0.1) * self.unit), int((((7 - y) if self.color else y) + 0.1) * self.unit)),
                 )
 
         pygame.display.flip()
@@ -253,4 +254,4 @@ class Board:
                     event.type == MOUSEBUTTONDOWN and event.button == 1
                 ):  # We return the coordonate of the click
                     x, y = event.pos
-                    return 7 - y // self.unit, x // self.unit
+                    return ((7 - y // self.unit) if self.color else (y // self.unit)), ((x // self.unit) if self.color else (7 - x // self.unit))
