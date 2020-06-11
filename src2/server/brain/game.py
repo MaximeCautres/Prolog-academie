@@ -217,14 +217,17 @@ class Game:
                                         self.board.map[j][i].moved = True
 
                                     # Time to send the chosen piece to both player
-                                        
+                                    self.server.sendPieceMovement(self.move)
+                                    self.server.sendPieceSuppression(self.eat)
+                                    
                                     self.server.sendChange(self.player, j, i, "queen" if n == 1 else ("bishop" if n == 2 else ("knight" if n == 3 else 'rook')))
 
                                 # here we send the new positions
-                                    
-                                self.server.sendPieceMovement(self.move)
-                                self.server.sendPieceSuppression(self.eat)
-                                    
+
+                                else:
+                                    self.server.sendPieceMovement(self.move)
+                                    self.server.sendPieceSuppression(self.eat)
+                                print("On est la ?")
                                 # Change round - new board
                                 self.server.sendUpdateDisplay(
                                     [self.selected] + self.possibleAction

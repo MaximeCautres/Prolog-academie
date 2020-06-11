@@ -51,6 +51,7 @@ class Game:
 
 
         if what_action == "PawnArrival":
+            
             j, i = self.client.recvInformation()
 
             n = 0
@@ -65,13 +66,15 @@ class Game:
                         "Entry not valid (must be between 1 and 4)"
                     )
                     n = 0
-
+                    
             self.client.sendEvent(n)
+            print("coucou")
 
         if what_action == "Change":
             color, j, i, piece = self.client.recvInformation()
             print(piece)
-            self.board.map[j][i] = (piece, color)
+            self.board.map[j][i] = [piece, color]
+            print(self.board.map[j][i])
 
         if what_action == 'Check':
             print("You are check, protect your king!")

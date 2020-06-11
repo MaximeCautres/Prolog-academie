@@ -16,8 +16,8 @@ class Board:
         
         # Initialization of the board with all the pieces
         for x in range(8):
-            self.map[1][x] = ('pawn', True)
-            self.map[6][x] = ('pawn', False)
+            self.map[1][x] = ['pawn', True]
+            self.map[6][x] = ['pawn', False]
         self.map[0][0] = ('rook', True)
         self.map[0][7] = ('rook', True)
         self.map[7][0] = ('rook', False)
@@ -237,6 +237,7 @@ class Board:
                 ((x if self.color else (7-x)) * self.unit, ((7 - y) if self.color else y) * self.unit),
             )
             if self.map[y][x] != None:
+                print(y, x, self.map[y][x])
                 self.window.blit(
                     self.pieces_skin[self.map[y][x][0]][self.map[y][x][1]],
                     (int(((x if self.color else (7-x)) + 0.1) * self.unit), int((((7 - y) if self.color else y) + 0.1) * self.unit)),
