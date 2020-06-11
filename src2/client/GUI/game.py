@@ -15,8 +15,6 @@ class Game:
         what_action = self.client.recvSignal() # the filter to know which task will be done
 
         if what_action == "Event": # The player will select a piece
-
-            print("It's your turn")
             
             event = self.board.getEvent()
 
@@ -68,16 +66,17 @@ class Game:
                     n = 0
                     
             self.client.sendEvent(n)
-            print("coucou")
 
         if what_action == "Change":
             color, j, i, piece = self.client.recvInformation()
-            print(piece)
             self.board.map[j][i] = [piece, color]
-            print(self.board.map[j][i])
 
         if what_action == 'Check':
             print("You are check, protect your king!")
+            self.client.sendEvent("go")
+
+        if what_action == 'YourTurn':
+            print("It's your turn")
             self.client.sendEvent("go")
 
         if what_action == "EndGame":

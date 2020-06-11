@@ -237,7 +237,6 @@ class Board:
                 ((x if self.color else (7-x)) * self.unit, ((7 - y) if self.color else y) * self.unit),
             )
             if self.map[y][x] != None:
-                print(y, x, self.map[y][x])
                 self.window.blit(
                     self.pieces_skin[self.map[y][x][0]][self.map[y][x][1]],
                     (int(((x if self.color else (7-x)) + 0.1) * self.unit), int((((7 - y) if self.color else y) + 0.1) * self.unit)),

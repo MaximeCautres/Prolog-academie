@@ -165,6 +165,11 @@ class Server():
         print("Check")
         self.player[color].send("Check".encode("Utf8")) # signal
         self.player[color].recv(1024).decode("Utf8")
+
+    def sendYourTurn(self, color):
+        self.player[color].send("YourTurn".encode("Utf8")) # signal
+        self.player[color].recv(1024).decode("Utf8")
+                                
         
     def sendEndGame(self):
         print("EndGame")

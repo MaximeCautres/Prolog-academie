@@ -19,8 +19,10 @@ class Game:
         self.server = server
         self.move = []
         self.eat = []
+        self.player = True
 
     def launchGame(self):
+        self.server.sendYourTurn(self.player)
         while self.inGame:
             self.round()
 
@@ -61,7 +63,7 @@ class Game:
                             deepcopy(self.board.king),
                         )
                         if self.check:
-                            print("your are check")
+                            print("Check")
                             self.server.sendCheck(self.player)
                         if (
                             self.board.map[self.selected[0]][self.selected[1]].piecetype
@@ -122,8 +124,9 @@ class Game:
                             self.player = not self.player
                             played = True
                             print(
-                                f"It's the round of {'white' if self.player else 'black'} to play"
+                                f"It's the {'white' if self.player else 'black'} round"
                             )
+                            self.server.sendYourTurn(self.player)
 
                             
                         else:  # normal movement or eat
@@ -227,7 +230,6 @@ class Game:
                                 else:
                                     self.server.sendPieceMovement(self.move)
                                     self.server.sendPieceSuppression(self.eat)
-                                print("On est la ?")
                                 # Change round - new board
                                 self.server.sendUpdateDisplay(
                                     [self.selected] + self.possibleAction
@@ -248,6 +250,7 @@ class Game:
                                 print(
                                     f"It's the round of {'white' if self.player else 'black'} to play"
                                 )
+                                self.server.sendYourTurn(self.player)
 
                     else:  # The player decides to cancel his selection
                         self.server.sendUpdateDisplay(self.possibleAction + [self.selected])
