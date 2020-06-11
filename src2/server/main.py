@@ -9,16 +9,19 @@ from classes.pawn import Pawn
 from classes.queen import Queen
 from classes.rook import Rook
 
-from GUI.board import Board
-from GUI.game import Game
+from network.server import Server
+from brain.board import Board
+from brain.game import Game
 
-unit = 140
+host = "192.168.1.19"
+port = 50000
 
 if __name__ == "__main__":
 
-    pygame.init()
-
-    board = Board(unit)
-    board.display()
-    game = Game(board)
+    server = Server(host, port, 2)
+    server.connexion_of_client()
+    board = Board()
+    game = Game(board, server)
     game.launchGame()
+
+    server.mySocket.close()
