@@ -193,7 +193,7 @@ class Game:
                                     elif n == 2:
                                         self.board.map[j][i] = Bishop(self.player, i, j)
                                     elif n == 3:
-                                        self.board.map[j][i] = Knoght(self.player, i, j)
+                                        self.board.map[j][i] = Knight(self.player, i, j)
                                     else:
                                         self.board.map[j][i] = Rook(self.player, i, j)
                                         self.board.map[j][i].moved = True
