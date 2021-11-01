@@ -19,6 +19,6 @@ Do not hesitate to modify the unit variable which defines the size in pixel of a
 
 ## Requirement for the chess game:
 
-- python3.7 or less (pygame isn't compatible for the moment with python3.8)
+- python3
 - mathplotlib python library
 - pygame python library
